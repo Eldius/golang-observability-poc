@@ -1,5 +1,12 @@
 # observability pocs #
 
+A simple project to study distributed tracing.
+
+## test architecture structure ##
+
+![test architecture](docs\observability_poc_diagram.drawio.png)
+*test architecture*
+
 
 ## reference links ##
 
