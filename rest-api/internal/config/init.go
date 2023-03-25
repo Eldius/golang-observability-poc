@@ -27,8 +27,6 @@ func Setup(cfgFile string) {
 
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetEnvPrefix("api")
-	//viper.BindEnv("log.level")
-	//viper.BindEnv("otel.endpoint")
 
 	//viper.SetDefault("log.level", "DEBUG")
 	viper.AutomaticEnv() // read in environment variables that match

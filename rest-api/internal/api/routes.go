@@ -23,16 +23,7 @@ func Start(port int) {
 	r.Use(otelchi.Middleware(config.GetServiceName(), otelchi.WithChiRoutes(r)))
 	r.Use(httplog.RequestLogger(httpLogger))
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		l := logger.GetLogger(r.Context())
-		l.Info("get root begin")
-		l.Info("testing: %s", r.Context())
-
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("welcome"))
-
-		l.Info("get root end")
-	})
+	r.Get("/", pingHandlerfunc)
 
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
@@ -40,4 +31,16 @@ func Start(port int) {
 		Int("port", port).
 		Msg("starting")
 	panic(http.ListenAndServe(fmt.Sprintf(":%d", port), r))
+}
+
+func pingHandlerfunc(w http.ResponseWriter, r *http.Request) {
+
+	l := logger.GetLogger(r.Context())
+	l.Info().Msg("get root begin")
+	l.Info().Msgf("testing: %s", r.Context())
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("welcome"))
+
+	l.Info().Msg("get root end")
 }
