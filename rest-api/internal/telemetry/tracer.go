@@ -118,3 +118,8 @@ func wait(tp *sdktrace.TracerProvider) {
 	<-ctx.Done()
 
 }
+
+func NotifyError(ctx context.Context, err error) {
+	span := trace.SpanFromContext(ctx)
+	span.RecordError(err, trace.WithStackTrace(true))
+}

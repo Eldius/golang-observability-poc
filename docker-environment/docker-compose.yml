@@ -19,3 +19,12 @@ services:
       interval: 10s
       retries: 10
       test: curl -s http://localhost:16687/ | grep -vq '"status":"Server available"'
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=rest_api
+      - POSTGRES_DB=rest_api
+      - POSTGRES_PASSWORD=P@ss

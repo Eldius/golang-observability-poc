@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"github.com/eldius/rest-api/internal/config"
+	"github.com/eldius/rest-api/internal/db"
 	"github.com/eldius/rest-api/internal/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/httplog"
@@ -22,6 +23,7 @@ func Start(port int) {
 
 	r.Use(otelchi.Middleware(config.GetServiceName(), otelchi.WithChiRoutes(r)))
 	r.Use(httplog.RequestLogger(httpLogger))
+	r.Use(AuthApiKey("api", db.DB()))
 
 	r.Get("/", pingHandlerfunc)
 

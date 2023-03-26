@@ -1,2 +1,6 @@
 ---
-
+db:
+  user: rest_api
+  port: 5432
+  migrations:
+    enabled: true

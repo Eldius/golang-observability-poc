@@ -6,6 +6,7 @@ package cmd
 import (
 	"github.com/eldius/rest-api/internal/api"
 	"github.com/eldius/rest-api/internal/config"
+	"github.com/eldius/rest-api/internal/db"
 	"github.com/eldius/rest-api/internal/telemetry"
 	"github.com/spf13/cobra"
 	"os"
@@ -20,6 +21,7 @@ var rootCmd = &cobra.Command{
 		config.Setup(cfgFile)
 		config.SetupLogs()
 		telemetry.InitTelemetry()
+		db.Migrations()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		api.Start(apiPort)
