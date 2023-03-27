@@ -49,7 +49,7 @@ service-a-jaeger:
 	docker run \
 		--rm \
 		--name service_a \
-		--network docker-environment_default \
+		--network jaeger_default \
 		-m 16m \
 		-p 8080:8080 \
 		-e "API_OTEL_ENDPOINT=jaeger:4317" \
@@ -83,4 +83,5 @@ env-jaeger: env-jaeger-down
 		-f docker-compose-jaeger.yml \
 		-f ../docker-compose-db.yml \
 		up \
+		-d \
 			--build
