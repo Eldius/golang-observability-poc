@@ -3,7 +3,7 @@ package config
 import "github.com/spf13/viper"
 
 func GetServiceName() string {
-	return "rest-api"
+	return "rest-service-a"
 }
 
 func GetLogLevel() string {

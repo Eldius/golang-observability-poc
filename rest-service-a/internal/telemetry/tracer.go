@@ -88,6 +88,7 @@ func otelExporter(ctx context.Context) sdktrace.SpanExporter {
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create gRPC connection to collector")
 	}
+
 	exporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithGRPCConn(conn))
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to setup exporter")

@@ -1,4 +1,4 @@
-
+---
 services:
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -16,15 +16,7 @@ services:
     command: "--collector.otlp.grpc.host-port \":4317\""
     mem_limit: 512m
     healthcheck:
+      test: wget --spider http://localhost:16686/ || exit 1
       interval: 10s
       retries: 10
-      test: curl -s http://localhost:16687/ | grep -vq '"status":"Server available"'
-  postgres:
-    image: postgres
-    container_name: postgres
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=rest_api
-      - POSTGRES_DB=rest_api
-      - POSTGRES_PASSWORD=P@ss
+      timeout: 5s

@@ -15,12 +15,7 @@ var db *sqlx.DB
 
 func DB() *sqlx.DB {
 	if db == nil {
-		_db, err := otelsqlx.Open(
-			"postgres",
-			getDBConnectionString(),
-			otelsql.WithAttributes(semconv.DBSystemPostgreSQL),
-			otelsql.WithDBName(config.GetDBName()),
-		)
+		_db, err := open()
 		if err != nil {
 			log.Fatal().
 				Err(err).
@@ -30,6 +25,22 @@ func DB() *sqlx.DB {
 	}
 
 	return db
+}
+
+func open() (*sqlx.DB, error) {
+
+	if config.EnableTraceDB() {
+		return otelsqlx.Open(
+			"postgres",
+			getDBConnectionString(),
+			otelsql.WithAttributes(semconv.DBSystemPostgreSQL),
+			otelsql.WithDBName(config.GetDBName()),
+		)
+	}
+	return sqlx.Open(
+		"postgres",
+		getDBConnectionString(),
+	)
 }
 
 func getDBConnectionString() string {

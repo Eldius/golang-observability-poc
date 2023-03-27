@@ -21,11 +21,14 @@ func Start(port int) {
 
 	r := chi.NewRouter()
 
-	r.Use(otelchi.Middleware(config.GetServiceName(), otelchi.WithChiRoutes(r)))
+	setupRestTracing(r)
+
 	r.Use(httplog.RequestLogger(httpLogger))
 	r.Use(AuthApiKey("api", db.DB()))
 
-	r.Get("/", pingHandlerfunc)
+	r.Get("/", homeHandlerfunc)
+	r.Get("/ping", pingHandlerfunc)
+	r.Get("/health", healthHandlerfunc)
 
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
@@ -35,14 +38,37 @@ func Start(port int) {
 	panic(http.ListenAndServe(fmt.Sprintf(":%d", port), r))
 }
 
-func pingHandlerfunc(w http.ResponseWriter, r *http.Request) {
+func homeHandlerfunc(w http.ResponseWriter, r *http.Request) {
 
 	l := logger.GetLogger(r.Context())
 	l.Info().Msg("get root begin")
 	l.Info().Msgf("testing: %s", r.Context())
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("welcome"))
+	w.Write([]byte("home"))
 
 	l.Info().Msg("get root end")
+}
+
+func pingHandlerfunc(w http.ResponseWriter, r *http.Request) {
+
+	l := logger.GetLogger(r.Context())
+	l.Info().Msg("get ping begin")
+	l.Info().Msgf("testing: %s", r.Context())
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("welcome"))
+
+	l.Info().Msg("get ping end")
+}
+
+func healthHandlerfunc(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(""))
+}
+
+func setupRestTracing(r *chi.Mux) {
+	if config.EnableTraceRest() {
+		r.Use(otelchi.Middleware(config.GetServiceName(), otelchi.WithChiRoutes(r)))
+	}
 }
