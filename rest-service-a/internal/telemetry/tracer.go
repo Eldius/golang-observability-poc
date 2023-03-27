@@ -39,13 +39,13 @@ func initTracer(ctx context.Context) {
 }
 
 func initTracerProvider(ctx context.Context) *sdktrace.TracerProvider {
-	exporter := chooseExporter(ctx)
+	exporter := chooseTraceExporter(ctx)
 
 	res := resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.ServiceNameKey.String(config.GetServiceName()),
 		semconv.ServiceVersionKey.String("v0.0.0"),
-		attribute.String("environment", "demo"),
+		attribute.String("environment", config.GetEnvironment()),
 	)
 
 	// Register the trace exporter with a TracerProvider, using a batch
@@ -62,7 +62,7 @@ func initTracerProvider(ctx context.Context) *sdktrace.TracerProvider {
 	return provider
 }
 
-func stdoutExporter() sdktrace.SpanExporter {
+func stdoutTraceExporter() sdktrace.SpanExporter {
 	log.Debug().Msg("configuring stdout trace export")
 
 	var err error
@@ -74,13 +74,13 @@ func stdoutExporter() sdktrace.SpanExporter {
 	return exporter
 }
 
-func otelExporter(ctx context.Context) sdktrace.SpanExporter {
-	log.Debug().Msgf("configuring trace export for '%s'", config.GetOtelEndpoint())
+func otelTraceExporter(ctx context.Context) sdktrace.SpanExporter {
+	log.Debug().Msgf("configuring trace export for '%s'", config.GetOtelTraceEndpoint())
 
 	var err error
 	conn, err := grpc.DialContext(
 		ctx,
-		config.GetOtelEndpoint(),
+		config.GetOtelTraceEndpoint(),
 		// Note the use of insecure transport here. TLS is recommended in production.
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
@@ -97,13 +97,13 @@ func otelExporter(ctx context.Context) sdktrace.SpanExporter {
 	return exporter
 }
 
-func chooseExporter(ctx context.Context) sdktrace.SpanExporter {
-	endpoint := config.GetOtelEndpoint()
+func chooseTraceExporter(ctx context.Context) sdktrace.SpanExporter {
+	endpoint := config.GetOtelTraceEndpoint()
 	log.Debug().Msgf("otel_endpoint: %s", endpoint)
 	if endpoint == "" {
-		return stdoutExporter()
+		return stdoutTraceExporter()
 	} else {
-		return otelExporter(ctx)
+		return otelTraceExporter(ctx)
 	}
 }
 
