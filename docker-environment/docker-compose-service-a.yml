@@ -1,20 +1,5 @@
 ---
 services:
-  postgres:
-    image: postgres
-    container_name: postgres
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=rest_api
-      - POSTGRES_DB=rest_api
-      - POSTGRES_PASSWORD=P@ss
-    mem_limit: 256m
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   service_a:
     build: ../rest-service-a
     container_name: service-a
@@ -22,18 +7,10 @@ services:
       - 8080:8080
     environment:
       - API_LOG_LEVEL="trace"
-      - API_OTEL_ENDPOINT="$(OTEL_ENDPOINT):21890"
-      - API_DB_HOST=postgres
+      - API_OTEL_ENDPOINT="$(OTEL_ENDPOINT)"
+      - API_DB_HOST=$(DB_HOST)
       - API_DB_PASS="P@ss"
       - API_TELEMETRY_REST_ENABLE=true
       - API_TELEMETRY_DB_ENABLE=true
     mem_limit: 16m
-    depends_on:
-      postgres:
-        condition: service_healthy
-    # healthcheck:
-    #   test: curl --fail http://localhost:8080/health || exit 1
-    #   interval: 30s
-    #   retries: 5
-    #   start_period: 10s
-    #   timeout: 1s
+

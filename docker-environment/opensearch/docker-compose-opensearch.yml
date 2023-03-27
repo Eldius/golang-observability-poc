@@ -5,9 +5,9 @@ services:
     container_name: data-prepper
     image: opensearchproject/data-prepper:2
     volumes:
-      - ./configs/opensearch/trace_analytics_no_ssl_2x.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
-      - ./configs/opensearch/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
-      - ./configs/opensearch/root-ca.pem:/usr/share/data-prepper/root-ca.pem
+      - ./configs/trace_analytics_no_ssl_2x.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
+      - ./configs/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
+      - ./configs/root-ca.pem:/usr/share/data-prepper/root-ca.pem
     ports:
       - "21890:21890"
     depends_on:

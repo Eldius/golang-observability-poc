@@ -11,7 +11,8 @@ RUN go build -o /app/app -v -a -ldflags '-extldflags "-static"' ./cmd/
 RUN ls -lha
 RUN chmod +x /app/app
 
-FROM alpine
+#FROM alpine
+FROM gcr.io/distroless/base
 
 EXPOSE 8080
 
@@ -19,5 +20,6 @@ WORKDIR /app
 
 COPY --chown=0:0 --from=builder /app/app /app
 COPY rest-api-config.yaml /app/rest-api-config.yaml
+COPY db/migrations /app/db/migrations
 
 ENTRYPOINT [ "./app", "--config", "/app/rest-api-config.yaml" ]

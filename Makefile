@@ -8,11 +8,11 @@ network-down:
 network: network-down
 	cd docker-environment ; docker compose -f docker-compose-network.yml up
 
-jaeger-down:
-	cd docker-environment ; docker compose -f docker-compose-jaeger.yml down
+# jaeger-down:
+# 	cd docker-environment ; docker compose -f docker-compose-jaeger.yml down
 
-jaeger: jaeger-down
-	cd docker-environment ; docker compose -f docker-compose-jaeger.yml up
+# jaeger: jaeger-down
+# 	cd docker-environment ; docker compose -f docker-compose-jaeger.yml up
 
 # opensearch-down:
 # 	cd docker-environment ; docker compose -f docker-compose-opensearch.yml down
@@ -20,46 +20,45 @@ jaeger: jaeger-down
 opensearch-down:
 	cd docker-environment ; docker compose -f docker-compose-network.yml -f docker-compose-opensearch.yml down
 
-# opensearch: network opensearch-down
-# 	cd docker-environment ; docker compose -f docker-compose-opensearch.yml up
-
 opensearch: opensearch-down
-	cd docker-environment ; docker compose -f docker-compose-network.yml -f docker-compose-opensearch.yml up
+	cd docker-environment/opensearch ; docker compose -f docker-compose-network.yml -f docker-compose-opensearch.yml up
 
-service-a-opensearch-down:
-	cd docker-environment ; docker compose -f docker-compose-network.yml -f docker-compose-opensearch.yml down
+# service-a-jaeger-down:
+# 	cd docker-environment ; docker compose \
+# 		-f docker-compose-service-a-jaeger.yml \
+# 			down
 
-service-a-opensearch: service-a-opensearch-down
+# service-a-jaeger: service-a-jaeger-down
+# 	cd docker-environment ; docker compose \
+# 		-f docker-compose-service-a-jaeger.yml \
+# 		up \
+# 			--build
+# 
+# service-a-db-down:
+# 	cd docker-environment ; docker compose \
+# 		-f docker-compose-db.yml \
+# 		down
+
+service-a-jaeger:
+	$(eval JAEGER_ENDPOINT := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jaeger))
 	$(eval DB_HOST := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres))
-	cd docker-environment ; OTEL_ENDPOINT=data-prepper docker compose \
-		-f docker-compose-service-a.yml \
-		-f docker-compose-network.yml \
-		-f docker-compose-opensearch.yml \
-		up \
-			--build
 
-service-a-jaeger-down:
-	cd docker-environment ; docker compose \
-		-f docker-compose-service-a-jaeger.yml \
-			down
+	cd rest-service-a && \
+		$(MAKE) build-docker
 
-service-a-jaeger: service-a-jaeger-down
-	$(eval DB_HOST := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres))
-	cd docker-environment ; docker compose \
-		-f docker-compose-service-a-jaeger.yml \
-		up \
-			--build
-
-service-a-db-down:
-	cd docker-environment ; docker compose \
-		-f docker-compose-db.yml \
-		down
-
-service-a-db: service-a-db-down
-	cd docker-environment ; docker compose \
-		-f docker-compose-db.yml \
-		up
-
+	docker run \
+		--rm \
+		--name service_a \
+		--network docker-environment_default \
+		-m 16m \
+		-p 8080:8080 \
+		-e "API_OTEL_ENDPOINT=jaeger:4317" \
+		-e "API_DB_HOST=postgres" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-a:dev
 
 service-a-local:
 	$(eval JAEGER_ENDPOINT := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jaeger))
@@ -73,10 +72,15 @@ service-a-local:
 		go run ./cmd \
 			--config rest-api-config.yaml
 
-testing:
-	$(eval DB_HOST := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres))
-	cd docker-environment ; OTEL_ENDPOINT=jaeger:4317 docker compose \
+env-jaeger-down:
+	cd docker-environment/jaeger ; docker compose \
 		-f docker-compose-jaeger.yml \
-		-f docker-compose-db.yml \
+		-f ../docker-compose-db.yml \
+		down
+
+env-jaeger: env-jaeger-down
+	cd docker-environment/jaeger ; docker compose \
+		-f docker-compose-jaeger.yml \
+		-f ../docker-compose-db.yml \
 		up \
 			--build

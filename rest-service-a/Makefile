@@ -10,3 +10,6 @@ start:
 		API_DB_PASS="P@ss" \
 		go run ./cmd \
 			--config ./rest-api-config.yaml
+
+build-docker:
+	docker build -t eldius/service-a:dev .

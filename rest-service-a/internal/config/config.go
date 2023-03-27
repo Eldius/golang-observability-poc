@@ -3,45 +3,49 @@ package config
 import "github.com/spf13/viper"
 
 func GetServiceName() string {
-	return "rest-service-a"
+    return "rest-service-a"
 }
 
 func GetLogLevel() string {
-	return viper.GetString("log.level")
+    return viper.GetString("log.level")
 }
 
 func GetOtelEndpoint() string {
-	return viper.GetString("otel.endpoint")
+    return viper.GetString("otel.endpoint")
 }
 
 func GetDBHost() string {
-	return viper.GetString("db.host")
+    return viper.GetString("db.host")
 }
 
 func GetDBPort() int {
-	return viper.GetInt("db.port")
+    return viper.GetInt("db.port")
 }
 
 func GetDBUser() string {
-	return viper.GetString("db.user")
+    return viper.GetString("db.user")
 }
 
 func GetDBPass() string {
-	return viper.GetString("db.pass")
+    return viper.GetString("db.pass")
 }
 
 func GetDBName() string {
-	return viper.GetString("db.database")
+    return viper.GetString("db.database")
 }
 
 func GetDBSSLEnabled() bool {
-	return viper.GetBool("db.ssl")
+    return viper.GetBool("db.ssl")
 }
 
 func GetMigrationsEnabled() bool {
-	return viper.GetBool("db.migrations.enabled")
+    return viper.GetBool("db.migrations.enabled")
 }
 
 func GetMigrationsSource() string {
-	return viper.GetString("db.migrations.source")
+    return viper.GetString("db.migrations.source")
+}
+
+func GetEnvironment() string {
+    return viper.GetString("environment")
 }
