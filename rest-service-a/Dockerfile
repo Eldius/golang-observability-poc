@@ -11,7 +11,7 @@ RUN go build -o /app/app -v -a -ldflags '-extldflags "-static"' ./cmd/
 RUN ls -lha
 RUN chmod +x /app/app
 
-FROM gcr.io/distroless/base
+FROM alpine
 
 EXPOSE 8080
 

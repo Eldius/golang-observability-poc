@@ -1,5 +1,26 @@
 ---
 services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "14269:14269"
+      - "4317"          # OTLP over gRPC receiver
+      - "4318:4318"     # OTLP over HTTP receiver
+      - "9464"          # Prometheus exporter
+      - "8888"          # metrics endpoint
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug
+    command: "--collector.otlp.grpc.host-port \":4317\""
+    mem_limit: 512m
+    healthcheck:
+      test: wget --spider http://localhost:16686/ || exit 1
+      interval: 10s
+      retries: 10
+      timeout: 5s
   postgres:
     image: postgres
     container_name: postgres
@@ -22,7 +43,7 @@ services:
       - 8080:8080
     environment:
       - API_LOG_LEVEL="trace"
-      - API_OTEL_ENDPOINT="$(OTEL_ENDPOINT):21890"
+      - API_OTEL_ENDPOINT="jaeger:21890"
       - API_DB_HOST=postgres
       - API_DB_PASS="P@ss"
       - API_TELEMETRY_REST_ENABLE=true
@@ -30,6 +51,8 @@ services:
     mem_limit: 16m
     depends_on:
       postgres:
+        condition: service_healthy
+      jaeger:
         condition: service_healthy
     # healthcheck:
     #   test: curl --fail http://localhost:8080/health || exit 1

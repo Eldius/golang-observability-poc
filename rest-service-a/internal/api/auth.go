@@ -22,36 +22,40 @@ func AuthApiKey(realm string, db *sqlx.DB) func(next http.Handler) http.Handler 
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			//l := logger.GetLogger(r.Context())
-			authHeader := strings.Trim(r.Header.Get("Authorization"), " ")
 
-			if len(authHeader) == 0 {
-				log.Warn().Msgf("empty auth header")
-				w.WriteHeader(http.StatusUnauthorized)
-				telemetry.NotifyError(r.Context(), errors.New("unauthenticated request"))
-				return
-			}
+			ctx := r.Context()
+			if r.URL.Path != "/health" {
+				authHeader := strings.Trim(r.Header.Get("Authorization"), " ")
 
-			var results []User
-			if err := db.SelectContext(
-				r.Context(),
-				&results,
-				"select id, name, username, api_key from api_users where api_key = $1",
-				authHeader,
-			); err != nil {
-				log.Error().Err(err).Str("api_key", authHeader).Msgf("failed to query db")
-				w.WriteHeader(http.StatusInternalServerError)
-				telemetry.NotifyError(r.Context(), err)
-				return
-			}
-			if len(results) != 1 {
-				log.Warn().Str("api_key", authHeader).Msgf("wrong query results count: %d", len(results))
-				w.WriteHeader(http.StatusUnauthorized)
-				telemetry.NotifyError(r.Context(), errors.New("unauthorized request"))
-				return
-			}
-			ctx := context.WithValue(r.Context(), "user", results[0])
+				if len(authHeader) == 0 {
+					log.Warn().Msgf("empty auth header")
+					w.WriteHeader(http.StatusUnauthorized)
+					telemetry.NotifyError(r.Context(), errors.New("unauthenticated request"))
+					return
+				}
 
-			log.Debug().Str("api_key", authHeader).Msgf("right query results count: %d", len(results))
+				var results []User
+				if err := db.SelectContext(
+					r.Context(),
+					&results,
+					"select id, name, username, api_key from api_users where api_key = $1",
+					authHeader,
+				); err != nil {
+					log.Error().Err(err).Str("api_key", authHeader).Msgf("failed to query db")
+					w.WriteHeader(http.StatusInternalServerError)
+					telemetry.NotifyError(r.Context(), err)
+					return
+				}
+				if len(results) != 1 {
+					log.Warn().Str("api_key", authHeader).Msgf("wrong query results count: %d", len(results))
+					w.WriteHeader(http.StatusUnauthorized)
+					telemetry.NotifyError(r.Context(), errors.New("unauthorized request"))
+					return
+				}
+				ctx = context.WithValue(r.Context(), "user", results[0])
+
+				log.Debug().Str("api_key", authHeader).Msgf("right query results count: %d", len(results))
+			}
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
