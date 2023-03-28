@@ -3,6 +3,7 @@ entry-pipeline:
   source:
     otel_trace_source:
       ssl: false
+      port: 21890
   # buffer:
   #   bounded_blocking:
   #     buffer_size: 10240
@@ -55,6 +56,7 @@ metrics-pipeline:
       ssl: false
       authentication:
         unauthenticated:
+      port: 21891
   processor:
     - otel_metrics_raw_processor:
   sink:
@@ -64,4 +66,5 @@ metrics-pipeline:
         cert: "/usr/share/data-prepper/root-ca.pem"
         username: admin
         password: admin
-        index: "metrics-otel-v1-%{yyyy.MM.dd}"
+        # index: "metrics-otel-v1-%{yyyy.MM.dd}"
+        # index_type: metrics-analytics-raw
