@@ -2,6 +2,10 @@ package config
 
 import "github.com/spf13/viper"
 
+var (
+	Version string
+)
+
 func GetServiceName() string {
 	return "rest-service-a"
 }
@@ -44,4 +48,12 @@ func GetMigrationsSource() string {
 
 func GetEnvironment() string {
 	return viper.GetString("environment")
+}
+
+func GetVersion() string {
+	if Version == "" {
+		return "v0.0.0"
+	}
+
+	return Version
 }

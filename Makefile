@@ -31,13 +31,29 @@ service-a-jaeger:
 	cd rest-service-a && \
 		$(MAKE) build-docker
 
+	# docker run \
+	# 	--rm \
+	# 	--name service_a \
+	# 	--network jaeger_default \
+	# 	-m 16m \
+	# 	-p 8080:8080 \
+	# 	-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
+	# 	-e "API_OTEL_METRICS_ENDPOINT=jaeger:4317" \
+	# 	-e "API_DB_HOST=postgres" \
+	# 	-e "API_DB_PASS=P@ss" \
+	# 	-e "API_TELEMETRY_REST_ENABLE=true" \
+	# 	-e "API_TELEMETRY_DB_ENABLE=true" \
+	# 	-e "API_LOG_LEVEL=trace" \
+	# 		eldius/service-a:dev
+
 	docker run \
 		--rm \
 		--name service_a \
 		--network jaeger_default \
 		-m 16m \
 		-p 8080:8080 \
-		-e "API_OTEL_ENDPOINT=jaeger:4317" \
+		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
+		-e "API_OTEL_METRICS_ENDPOINT=jaeger:4317" \
 		-e "API_DB_HOST=postgres" \
 		-e "API_DB_PASS=P@ss" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \

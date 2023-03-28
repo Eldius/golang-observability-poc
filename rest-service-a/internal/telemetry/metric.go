@@ -2,18 +2,23 @@ package telemetry
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/eldius/rest-api/internal/config"
+	"github.com/eldius/rest-api/internal/logger"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
+	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
 	"go.opentelemetry.io/otel/metric/global"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.18.0"
 	"google.golang.org/grpc/encoding/gzip"
+	"io"
 	"os"
 	"os/signal"
 	"time"
@@ -43,7 +48,7 @@ func initMetrics(ctx context.Context) {
 }
 
 func initMetricsProvider(ctx context.Context) *metric.MeterProvider {
-	exporter := otelMetricsExporter(ctx)
+	exporter := chooseMetricsExporter(ctx)
 
 	provider := metric.NewMeterProvider(
 		metric.WithReader(metric.NewPeriodicReader(exporter)),
@@ -62,14 +67,51 @@ func defaultResources() *resource.Resource {
 	res := resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.ServiceNameKey.String(config.GetServiceName()),
-		semconv.ServiceVersionKey.String("v0.0.0"),
+		semconv.ServiceVersionKey.String(config.GetVersion()),
 		attribute.String("environment", config.GetEnvironment()),
 	)
 	return res
 }
 
+type otelStdoutExporterWriter struct {
+	l zerolog.Logger
+	t string
+}
+
+func (e *otelStdoutExporterWriter) Write(p []byte) (n int, err error) {
+	e.l.Debug().Str("type", e.t).Msg(string(p))
+	return len(p), nil
+}
+
+func newStdoutWriter(t string) io.Writer {
+	return &otelStdoutExporterWriter{
+		l: logger.GetLogger(context.Background()),
+		t: t,
+	}
+}
+
+func stdoutMetricsExporter() metric.Exporter {
+	enc := json.NewEncoder(newStdoutWriter("otel_metrics"))
+	//enc.SetIndent("", "  ")
+	exp, err := stdoutmetric.New(stdoutmetric.WithEncoder(enc))
+	if err != nil {
+		panic(err)
+	}
+	return exp
+}
+
+func chooseMetricsExporter(ctx context.Context) metric.Exporter {
+	endpoint := config.GetOtelMetricsEndpoint()
+	log.Debug().Msgf("otel_metrics_endpoint: %s", endpoint)
+	if endpoint == "" {
+		return stdoutMetricsExporter()
+	} else {
+		return otelMetricsExporter(ctx)
+	}
+}
+
 func otelMetricsExporter(ctx context.Context) metric.Exporter {
-	log.Debug().Msgf("configuring metric export for '%s'", config.GetOtelTraceEndpoint())
+	log.Debug().Msgf("configuring metric export for '%s'", config.GetOtelMetricsEndpoint())
 
 	//var err error
 	//conn, err := grpc.DialContext(

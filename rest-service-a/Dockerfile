@@ -7,11 +7,16 @@ COPY . /app
 ENV CGO_ENABLED=0
 
 RUN apk add --no-cache git make build-base
-RUN go build -o /app/app -v -a -ldflags '-extldflags "-static"' ./cmd/
-RUN ls -lha
+RUN go build \
+    -o /app/app \
+    -v \
+    -a \
+    -ldflags '-extldflags "-static"' \
+    -ldflags "-X \"github.com/eldius/rest-api/rest-service-a/internal/config.Version=$( git rev-parse --short HEAD )\"" \
+      ./cmd/
+
 RUN chmod +x /app/app
 
-#FROM alpine
 FROM gcr.io/distroless/base
 
 EXPOSE 8080

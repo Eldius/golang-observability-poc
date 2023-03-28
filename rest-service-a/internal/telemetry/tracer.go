@@ -44,7 +44,7 @@ func initTracerProvider(ctx context.Context) *sdktrace.TracerProvider {
 	res := resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.ServiceNameKey.String(config.GetServiceName()),
-		semconv.ServiceVersionKey.String("v0.0.0"),
+		semconv.ServiceVersionKey.String(config.GetVersion()),
 		attribute.String("environment", config.GetEnvironment()),
 	)
 
@@ -66,7 +66,7 @@ func stdoutTraceExporter() sdktrace.SpanExporter {
 	log.Debug().Msg("configuring stdout trace export")
 
 	var err error
-	exporter, err := stdouttrace.New(stdouttrace.WithPrettyPrint(), stdouttrace.WithWriter(log.Logger))
+	exporter, err := stdouttrace.New(stdouttrace.WithPrettyPrint(), stdouttrace.WithWriter(newStdoutWriter("otel_tracing")))
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to setup exporter")
 	}
@@ -99,7 +99,7 @@ func otelTraceExporter(ctx context.Context) sdktrace.SpanExporter {
 
 func chooseTraceExporter(ctx context.Context) sdktrace.SpanExporter {
 	endpoint := config.GetOtelTraceEndpoint()
-	log.Debug().Msgf("otel_endpoint: %s", endpoint)
+	log.Debug().Msgf("otel_trace_endpoint: %s", endpoint)
 	if endpoint == "" {
 		return stdoutTraceExporter()
 	} else {
