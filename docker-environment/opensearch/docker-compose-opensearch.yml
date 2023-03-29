@@ -53,3 +53,33 @@ services:
       opensearch:
         condition: service_healthy
     mem_limit: 512m
+  logstash:
+    image: opensearchproject/logstash-oss-with-opensearch-output-plugin
+    container_name: logstash
+    mem_limit: 512m
+    volumes:
+      - ./configs/logstash.conf:/usr/share/logstash/config/logstash.conf
+    ports:
+      - 5044:5044
+    healthcheck:
+      test:  curl -XGET 'localhost:9600/?pretty'
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  filebeat:
+    container_name: filebeat
+    image: docker.elastic.co/beats/filebeat:8.6.1
+    user: root
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    command: [ "--strict.perms=false" ]
+    depends_on:
+      logstash:
+        condition: service_healthy
+    #   terraform:
+    #     condition: service_completed_successfully
+    # restart: always
+    mem_limit: 512m

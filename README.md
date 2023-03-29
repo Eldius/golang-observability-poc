@@ -17,6 +17,10 @@ A simple project to study distributed tracing.
 - [Trace analytics](https://opensearch.org/docs/latest/observing-your-data/trace/index/)
 - [Data Prepper configuration reference - bookstack.cn](https://www.bookstack.cn/read/opensearch-1.3.x-en/b4e83788f603aa05.md)
 
+- [opensearchproject/logstash-oss-with-opensearch-output-plugin - DockerHub](https://hub.docker.com/r/opensearchproject/logstash-oss-with-opensearch-output-plugin)
+- [Defining processors - Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html)
+- [Exported fields - Filebeat Processors](https://www.elastic.co/guide/en/beats/filebeat/current/exported-fields.html)
+
 
 ## useful urls ##
 
