@@ -2,7 +2,7 @@ package db
 
 import (
     "context"
-    "github.com/eldius/rest-api/internal/config"
+    "github.com/eldius/golang-observability-poc/rest-service-a/internal/config"
     _ "github.com/lib/pq"
     "github.com/rs/zerolog"
     "github.com/rs/zerolog/log"

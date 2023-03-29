@@ -1,10 +1,10 @@
 package cmd
 
 import (
-    "github.com/eldius/rest-api/internal/api"
-    "github.com/eldius/rest-api/internal/config"
-    "github.com/eldius/rest-api/internal/db"
-    "github.com/eldius/rest-api/internal/telemetry"
+    "github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
+    "github.com/eldius/golang-observability-poc/rest-service-a/internal/api"
+    "github.com/eldius/golang-observability-poc/rest-service-a/internal/config"
+    "github.com/eldius/golang-observability-poc/rest-service-a/internal/db"
     "github.com/spf13/cobra"
     "os"
 )
@@ -17,7 +17,13 @@ var rootCmd = &cobra.Command{
     PersistentPreRun: func(_ *cobra.Command, _ []string) {
         config.Setup(cfgFile)
         config.SetupLogs()
-        telemetry.InitTelemetry()
+        telemetry.InitTelemetry(
+            telemetry.WithEnvironment(config.GetEnvironment()),
+            telemetry.WithMetricsEndpoint(config.GetOtelMetricsEndpoint()),
+            telemetry.WithTracesEndpoint(config.GetOtelTraceEndpoint()),
+            telemetry.WithVersion(config.Version),
+            telemetry.WithServiceName(config.GetServiceName()),
+        )
         _ = db.Migrations()
     },
     Run: func(cmd *cobra.Command, args []string) {
