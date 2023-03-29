@@ -2,9 +2,9 @@ package api
 
 import (
     "fmt"
-    "github.com/eldius/golang-observability-poc/rest-service-a/internal/config"
-    "github.com/eldius/golang-observability-poc/rest-service-a/internal/db"
-    "github.com/eldius/golang-observability-poc/rest-service-a/internal/logger"
+    "github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
+    "github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/db"
+    "github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/logger"
     "github.com/go-chi/chi/v5"
     "github.com/go-chi/httplog"
     "github.com/riandyrn/otelchi"

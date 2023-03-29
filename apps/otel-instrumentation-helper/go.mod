@@ -1,4 +1,4 @@
-module github.com/eldius/golang-observability-poc/otel-instrumentation-helper
+module github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper
 
 go 1.20
 

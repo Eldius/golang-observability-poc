@@ -13,3 +13,15 @@ start:
 
 build-docker:
 	docker build -t eldius/service-a:dev .
+
+tidy:
+	go mod tidy
+
+build: tidy
+	go build \
+		-o .bin/app \
+		-v \
+		-a \
+		-ldflags '-extldflags "-static"' \
+		-ldflags "-X \"github.com/eldius/rest-api/rest-service-a/internal/config.Version=$(shell git rev-parse --short HEAD )\"" \
+		./cmd/
