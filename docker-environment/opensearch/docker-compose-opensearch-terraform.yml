@@ -1,21 +1,5 @@
 ---
 services:
-  data-prepper:
-    restart: unless-stopped
-    container_name: data-prepper
-    image: opensearchproject/data-prepper:2
-    volumes:
-      # - ./configs/trace_analytics_no_ssl_2x.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
-      - ./configs/trace_analytics_no_ssl_2x_with_metrics.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
-      - ./configs/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
-      - ./configs/root-ca.pem:/usr/share/data-prepper/root-ca.pem
-    ports:
-      - "21890:21890"
-      - "21891:21891"
-    depends_on:
-      opensearch:
-        condition: service_healthy
-    mem_limit: 256m
   opensearch:
     container_name: node-0.example.com
     image: opensearchproject/opensearch:2
@@ -52,39 +36,6 @@ services:
     depends_on:
       opensearch:
         condition: service_healthy
-    mem_limit: 512m
-  logstash:
-    image: opensearchproject/logstash-oss-with-opensearch-output-plugin
-    container_name: logstash
-    mem_limit: 1.5g
-    volumes:
-      - ./configs/logstash.conf:/usr/share/logstash/config/logstash.conf
-    ports:
-      - 5044:5044
-    depends_on:
-      opensearch:
-        condition: service_healthy
-    healthcheck:
-      test:  curl -XGET 'localhost:9600/?pretty'
-      interval: 30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-  filebeat:
-    container_name: filebeat
-    image: docker.elastic.co/beats/filebeat:8.6.1
-    user: root
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-    command: [ "--strict.perms=false" ]
-    depends_on:
-      logstash:
-        condition: service_healthy
-    #   terraform:
-    #     condition: service_completed_successfully
-    # restart: always
     mem_limit: 512m
   terraform:
     image: hashicorp/terraform

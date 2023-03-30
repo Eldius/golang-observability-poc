@@ -27,6 +27,20 @@ env-opensearch: env-opensearch-down
 		-d \
 			--build
 
+env-opensearch-terraform-down:
+	cd docker-environment/opensearch ; docker compose \
+		-f docker-compose-opensearch-terraform.yml \
+		-f ../docker-compose-db.yml \
+		down
+
+env-opensearch-terraform: env-opensearch-terraform-down
+	cd docker-environment/opensearch ; docker compose \
+		-f docker-compose-opensearch-terraform.yml \
+		-f ../docker-compose-db.yml \
+		up \
+		-d \
+			--build
+
 filebeat: filebeat-down
 	cd docker-environment/opensearch ; docker compose \
 		-f docker-compose-filebeat.yml \
@@ -115,3 +129,17 @@ service-a-local-jaeger:
 
 watch-service-a:
 	watch -n 10 'curl -i localhost:8080/ping -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
+
+terraform-docker:
+	docker \
+		run \
+		--rm \
+		-it \
+		--entrypoint sh \
+		-v ${PWD}/docker-environment/opensearch/terraform:/wrksp \
+		-e ELASTICSEARCH_USERNAME=admin \
+      	-e ELASTICSEARCH_PASSWORD=admin \
+      	-e ELASTICSEARCH_URL=node-0.example.com:9200 \
+		--network=opensearch_default \
+		-w /wrksp \
+			hashicorp/terraform
