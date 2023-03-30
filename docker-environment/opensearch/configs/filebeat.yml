@@ -2,16 +2,16 @@
 filebeat.autodiscover:
   providers:
     - type: docker
-      condition:
-        not:
-          regexp:
-            docker.container.name: "(opensearch|logstash|filebeat)"
+      exclude_lines: [ "^filebeat", "^postgres", "^data-prepper", "^opensearch", "^opensearch", "^logstash" ]
       templates:
         - config:
-            - type: container
-              paths:
-                - /var/lib/docker/containers/${data.docker.container.id}/*.log
-
+          - type: container
+            exclude_lines: [ "^filebeat", "^postgres", "^data-prepper", "^opensearch", "^opensearch", "^logstash" ]
+            paths:
+              - /var/lib/docker/containers/${data.docker.container.id}/*.log
+          condition:
+            contains:
+              docker.container.name: service
 processors:
   - add_cloud_metadata: ~
 
@@ -20,13 +20,19 @@ processors:
 output.logstash:
   hosts: ["logstash:5044"]
 
+# output.console:
+#   pretty: true
 
-logging:
+
+#logging.selectors: [ output ]
+
+#logging:
   # level: debug
-  level: info
-  to_files: true
-  files:
-    path: /var/log/filebeat
-    name: filebeat.log
-    keepfiles: 7
-    permissions: 0640
+  # level: info
+  # to_files: true
+  # files:
+  #   path: /var/log/filebeat
+  #   name: filebeat.log
+  #   keepfiles: 7
+  #   permissions: 0640
+

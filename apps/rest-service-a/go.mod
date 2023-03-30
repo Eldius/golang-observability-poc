@@ -2,8 +2,10 @@ module github.com/eldius/golang-observability-poc/apps/rest-service-a
 
 go 1.20
 
+//replace github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper => ../otel-instrumentation-helper
+
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230329173245-02d9d91576b6
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230329202356-c8a91664c897
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/httplog v0.2.5
 	github.com/jmoiron/sqlx v1.3.5

@@ -56,11 +56,14 @@ services:
   logstash:
     image: opensearchproject/logstash-oss-with-opensearch-output-plugin
     container_name: logstash
-    mem_limit: 512m
+    mem_limit: 1.5g
     volumes:
       - ./configs/logstash.conf:/usr/share/logstash/config/logstash.conf
     ports:
       - 5044:5044
+    depends_on:
+      opensearch:
+        condition: service_healthy
     healthcheck:
       test:  curl -XGET 'localhost:9600/?pretty'
       interval: 30s
