@@ -27,4 +27,5 @@ func SetupLogs() {
 	default:
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 }

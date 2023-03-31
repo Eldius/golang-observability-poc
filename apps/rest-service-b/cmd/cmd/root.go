@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
+	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/api"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/config"
 
 	"github.com/spf13/cobra"
@@ -21,12 +22,13 @@ var rootCmd = &cobra.Command{
 			telemetry.WithEnvironment(config.GetEnvironment()),
 			telemetry.WithMetricsEndpoint(config.GetOtelMetricsEndpoint()),
 			telemetry.WithTracesEndpoint(config.GetOtelTraceEndpoint()),
-			telemetry.WithVersion(config.Version),
+			telemetry.WithVersion(config.GetVersion()),
 			telemetry.WithServiceName(config.GetServiceName()),
 		)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Running...")
+		api.Start(apiPort)
 	},
 }
 

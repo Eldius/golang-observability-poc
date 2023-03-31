@@ -1,2 +1,5 @@
 ---
 environment: simulation
+integration:
+  weather:
+    endpoint: https://api.api-ninjas.com/v1/weather

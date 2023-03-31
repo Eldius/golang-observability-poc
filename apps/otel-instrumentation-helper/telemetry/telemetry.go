@@ -5,6 +5,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/riandyrn/otelchi"
 	"github.com/rs/zerolog/log"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type options struct {
@@ -107,4 +109,19 @@ func SetupRestTracing(r *chi.Mux) {
 		return
 	}
 	r.Use(otelchi.Middleware(telemetryOpts.serviceName, otelchi.WithChiRoutes(r)))
+}
+
+func StartSpan(ctx context.Context, name string) (context.Context, func()) {
+	c, s := Tracer.Start(ctx, name)
+	return c, func() {
+		s.End()
+	}
+}
+
+func AddAttribute(ctx context.Context, k, v string) {
+	trace.SpanFromContext(ctx).SetAttributes(attribute.String(k, v))
+}
+
+func NewSpan(ctx context.Context, name string) (context.Context, trace.Span) {
+	return Tracer.Start(ctx, name)
 }

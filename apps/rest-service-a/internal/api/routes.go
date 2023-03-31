@@ -8,7 +8,6 @@ import (
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/httplog"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"net/http"
 )
@@ -28,8 +27,6 @@ func Start(port int) {
 	r.Get("/", homeHandlerfunc)
 	r.Get("/ping", pingHandlerfunc)
 	r.Get("/health", healthHandlerfunc)
-
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
 	log.Info().
 		Int("port", port).

@@ -57,3 +57,7 @@ func GetVersion() string {
 
 	return Version
 }
+
+func GetWeatherServiceEndpoint() string {
+	return viper.GetString("integration.weather.endpoint")
+}
