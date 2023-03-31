@@ -5,7 +5,7 @@ go 1.20
 //replace github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper => ../otel-instrumentation-helper
 
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230329202356-c8a91664c897
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230331184521-28cba5a08175
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/httplog v0.2.5
 	github.com/jmoiron/sqlx v1.3.5
