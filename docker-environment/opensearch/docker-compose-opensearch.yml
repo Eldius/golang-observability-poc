@@ -6,12 +6,14 @@ services:
     image: opensearchproject/data-prepper:2
     volumes:
       # - ./configs/trace_analytics_no_ssl_2x.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
+      # - ./configs/trace_analytics_no_ssl_2x_with_metrics_and_logs.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
       - ./configs/trace_analytics_no_ssl_2x_with_metrics.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
       - ./configs/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
       - ./configs/root-ca.pem:/usr/share/data-prepper/root-ca.pem
     ports:
       - "21890:21890"
       - "21891:21891"
+      - "2021:2021"
     depends_on:
       opensearch:
         condition: service_healthy
@@ -54,16 +56,19 @@ services:
         condition: service_healthy
     mem_limit: 512m
   logstash:
-    image: opensearchproject/logstash-oss-with-opensearch-output-plugin
+    image: opensearchproject/logstash-oss-with-opensearch-output-plugin:8.4.0
     container_name: logstash
     mem_limit: 1.5g
     volumes:
-      - ./configs/logstash.conf:/usr/share/logstash/config/logstash.conf
+      # - ./configs/logstash.conf:/usr/share/logstash/config/logstash.conf
+      - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - 5044:5044
     depends_on:
       opensearch:
         condition: service_healthy
+      init:
+        condition: service_completed_successfully
     healthcheck:
       test:  curl -XGET 'localhost:9600/?pretty'
       interval: 30s
@@ -80,28 +85,23 @@ services:
       - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
     command: [ "--strict.perms=false" ]
     depends_on:
+    #   data-prepper:
+    #     condition: service_healthy
       logstash:
         condition: service_healthy
-    #   terraform:
-    #     condition: service_completed_successfully
+      init:
+        condition: service_completed_successfully
     # restart: always
     mem_limit: 512m
-  terraform:
+  init:
     image: hashicorp/terraform
-    container_name: terraform
-    environment:
-      - ELASTICSEARCH_USERNAME=admin
-      - ELASTICSEARCH_PASSWORD=admin
-      - ELASTICSEARCH_URL=node-0.example.com:9200
-      - ELASTICSEARCH_HEALTH=false
-      # - TF_LOG_PROVIDER=TRACE
+    container_name: init
     working_dir: /workspace
     # command: ["apply", "-auto-approve"]
-    entrypoint: /terraform_entrypoint.sh
+    entrypoint: /init_entrypoint.sh
     depends_on:
       opensearch:
         condition: service_healthy
     volumes:
-      - ./terraform/:/workspace
-      - ./configs/terraform_entrypoint.sh:/terraform_entrypoint.sh:ro
+      - ./configs/init_entrypoint.sh:/init_entrypoint.sh:ro
     # restart: always

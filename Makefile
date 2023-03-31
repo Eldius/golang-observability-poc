@@ -130,16 +130,16 @@ service-a-local-jaeger:
 watch-service-a:
 	watch -n 10 'curl -i localhost:8080/ping -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
 
-terraform-docker:
+busybox:
 	docker \
 		run \
 		--rm \
 		-it \
-		--entrypoint sh \
-		-v ${PWD}/docker-environment/opensearch/terraform:/wrksp \
+		--entrypoint ash \
+		-v ${PWD}/docker-environment/opensearch/configs:/wrksp \
 		-e ELASTICSEARCH_USERNAME=admin \
       	-e ELASTICSEARCH_PASSWORD=admin \
       	-e ELASTICSEARCH_URL=node-0.example.com:9200 \
 		--network=opensearch_default \
 		-w /wrksp \
-			hashicorp/terraform
+			alpine

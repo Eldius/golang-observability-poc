@@ -16,9 +16,13 @@ processors:
   - add_cloud_metadata: ~
 
 
+# output:
+#   http:
+#     hosts: ["data-prepper:2021/log/ingest"]
+
 
 output.logstash:
-  hosts: ["logstash:5044"]
+ hosts: ["logstash:5044"]
 
 # output.console:
 #   pretty: true
