@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apk add curl
+apk add curl coreutils || exit 1
 
 echo ""
 echo "####################"
@@ -9,6 +9,7 @@ echo "####################"
 echo ""
 
 curl -i \
+    --fail \
     --insecure \
     -X PUT \
     -u 'admin:admin' \
@@ -232,11 +233,12 @@ curl -i \
         }
     },
     "aliases": {
-        "sample-alias1": {}
+        "application-logs": {}
     }
 }' || exit 1
 
 
+sleep 10
 
 
 echo ""
@@ -246,15 +248,37 @@ echo "## creating index pattern ##"
 echo "############################"
 echo ""
 
+while ! curl -i \
+        --fail \
+        --insecure \
+        -X POST \
+        -u 'admin:admin' \
+        'http://opensearch-dashboards:5601/api/saved_objects/index-pattern/application-logs' \
+        -H 'osd-xsrf: true' \
+        -H 'Content-Type: application/json' \
+        -H 'securitytenant: global' \
+        -d '{
+            "attributes": {
+                "title": "application-logs",
+                "timeFieldName": "@timestamp"
+            }
+        }'
+do
+    sleep 5
+done
+
 curl -i \
-    --insecure \
-    -X POST \
-    -u 'admin:admin' \
-    "https://node-0.example.com:9200/_index_template/application-logs" \
-    -H 'osd-xsrf: true' \
-    -H 'Content-Type: application/json' \
-    -d '{
-        "index_patterns": [
-            "application-logs"
-        ]
-    }' || exit 1
+        --fail \
+        --insecure \
+        -X POST \
+        -u 'admin:admin' \
+        'http://opensearch-dashboards:5601/api/saved_objects/index-pattern/metrics-otel-v1-*' \
+        -H 'osd-xsrf: true' \
+        -H 'Content-Type: application/json' \
+        -H 'securitytenant: global' \
+        -d '{
+            "attributes": {
+                "title": "metrics-otel-v1-*",
+                "timeFieldName": "@timestamp"
+            }
+        }'
