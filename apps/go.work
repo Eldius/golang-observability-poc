@@ -1,6 +1,7 @@
 go 1.20
 
 use (
-	./otel-instrumentation-helper/
+	./otel-instrumentation-helper
 	./rest-service-a
+	./rest-service-b
 )

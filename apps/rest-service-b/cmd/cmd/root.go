@@ -1,19 +1,19 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/api"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/db"
+	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/config"
+
 	"github.com/spf13/cobra"
 	"os"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "rest-service-a",
-	Short: "A simple rest api to test some concepts",
-	Long:  `A simple rest api to test some concepts.`,
+	Use:   "rest-service-b",
+	Short: "Another simple rest api to test some concepts",
+	Long:  `Another simple rest api to test some concepts.`,
 	PersistentPreRun: func(_ *cobra.Command, _ []string) {
 		config.Setup(cfgFile)
 		config.SetupLogs()
@@ -24,10 +24,9 @@ var rootCmd = &cobra.Command{
 			telemetry.WithVersion(config.Version),
 			telemetry.WithServiceName(config.GetServiceName()),
 		)
-		_ = db.Migrations()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		api.Start(apiPort)
+		fmt.Println("Running...")
 	},
 }
 

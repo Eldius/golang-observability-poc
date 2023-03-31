@@ -95,10 +95,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/denisenkom/go-mssqldb v0.9.0/go.mod h1:xbL0rPBG9cCiLr28tMa8zpbdarY27NDyej4t/EjAShU=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
-github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230329202356-c8a91664c897 h1:Vg9GyhK91Pk5jp7IDpvdxKPuO2CRk1qWPpVDf4MAf0M=
-github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230329202356-c8a91664c897/go.mod h1:hjMAI2lFMIEgsiIkq7Y0Y/4Iixrn0muRLfIhLjrKfbM=
-github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230331184521-28cba5a08175 h1:aTCOq4yaWsDXUW63BCICJNjxV66BLhrCuXgfX20cGhA=
-github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230331184521-28cba5a08175/go.mod h1:hjMAI2lFMIEgsiIkq7Y0Y/4Iixrn0muRLfIhLjrKfbM=
+github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230331213802-613b9607a651 h1:XfDrnY1HD7PfX0sLiPwhtOjaUbG0fkoxl345ovqZ9hY=
+github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230331213802-613b9607a651/go.mod h1:hjMAI2lFMIEgsiIkq7Y0Y/4Iixrn0muRLfIhLjrKfbM=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
