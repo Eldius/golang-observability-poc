@@ -5,8 +5,6 @@ services:
     container_name: data-prepper
     image: opensearchproject/data-prepper:2
     volumes:
-      # - ./configs/trace_analytics_no_ssl_2x.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
-      # - ./configs/trace_analytics_no_ssl_2x_with_metrics_and_logs.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
       - ./configs/trace_analytics_no_ssl_2x_with_metrics.yml:/usr/share/data-prepper/pipelines/pipelines.yaml
       - ./configs/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
       - ./configs/root-ca.pem:/usr/share/data-prepper/root-ca.pem
@@ -60,7 +58,6 @@ services:
     container_name: logstash
     mem_limit: 1.5g
     volumes:
-      # - ./configs/logstash.conf:/usr/share/logstash/config/logstash.conf
       - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - 5044:5044
@@ -85,8 +82,6 @@ services:
       - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
     command: [ "--strict.perms=false" ]
     depends_on:
-    #   data-prepper:
-    #     condition: service_healthy
       logstash:
         condition: service_healthy
       init:
@@ -105,3 +100,5 @@ services:
     volumes:
       - ./configs/init_entrypoint.sh:/init_entrypoint.sh:ro
     # restart: always
+
+
