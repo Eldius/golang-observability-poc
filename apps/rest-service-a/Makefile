@@ -30,3 +30,6 @@ build: tidy
 		-ldflags '-extldflags "-static"' \
 		-ldflags "-X 'github.com/eldius/rest-api/rest-service-a/internal/config.Version=$(shell git rev-parse --short HEAD )'" \
 		./cmd/
+
+update-library:
+	go get -u github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper@$(shell git rev-parse --short HEAD)

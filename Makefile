@@ -127,3 +127,8 @@ tidy: $(APPS)
 	for dir in $(APPS); do \
 		$(MAKE) -C $$dir tidy; \
 	done
+
+update-library:
+	$(eval CURR_DIR := $(PWD))
+	$(MAKE) -C apps/rest-service-a update-library
+	$(MAKE) -C apps/rest-service-b update-library
