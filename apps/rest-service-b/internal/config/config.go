@@ -7,7 +7,7 @@ var (
 )
 
 func GetServiceName() string {
-	return "rest-service-a"
+	return "rest-service-b"
 }
 
 func GetLogLevel() string {

@@ -96,7 +96,10 @@ service-a:
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-a:dev
 
-service-a-opensearch:
+service-a-opensearch-down:
+	docker kill service_a
+
+service-a-opensearch: service-a-opensearch-down
 	cd apps/rest-service-a && \
 		$(MAKE) build-docker
 
@@ -104,6 +107,7 @@ service-a-opensearch:
 		--rm \
 		--name service_a \
 		--network opensearch_default \
+		-d \
 		-m 16m \
 		-p 8080:8080 \
 		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
@@ -114,6 +118,32 @@ service-a-opensearch:
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-a:dev
+
+service-b-opensearch-down:
+	docker kill service_b
+
+service-b-opensearch: service-b-opensearch-down
+	cd apps/rest-service-b && \
+		$(MAKE) build-docker
+
+	docker run \
+		--rm \
+		--name service_b \
+		--network opensearch_default \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
+		-e "API_OTEL_METRICS_ENDPOINT=data-prepper:21891" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-b:dev
+
+services-opensearch: service-b-opensearch service-a-opensearch
+	@echo "Services started..."
+
+services-opensearch-down: service-a-opensearch-down service-b-opensearch-down
+	@echo "Services stopped..."
 
 service-a-local-jaeger:
 	$(eval JAEGER_ENDPOINT := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jaeger))

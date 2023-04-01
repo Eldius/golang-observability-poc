@@ -53,7 +53,6 @@ func healthHandlerfunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func weatherHandlerFunc(w http.ResponseWriter, r *http.Request) {
-
 	q := r.URL.Query()
 	c := q.Get("city")
 	we, err := weather.GetWeather(r.Context(), c)

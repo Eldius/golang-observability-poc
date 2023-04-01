@@ -1,11 +1,13 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/db"
+	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/weather"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/httplog"
 	"github.com/rs/zerolog/log"
@@ -27,6 +29,7 @@ func Start(port int) {
 	r.Get("/", homeHandlerfunc)
 	r.Get("/ping", pingHandlerfunc)
 	r.Get("/health", healthHandlerfunc)
+	r.Get("/weather", weatherHandlerfunc)
 
 	log.Info().
 		Int("port", port).
@@ -61,4 +64,23 @@ func pingHandlerfunc(w http.ResponseWriter, r *http.Request) {
 func healthHandlerfunc(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(""))
+}
+
+func weatherHandlerfunc(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	c := q.Get("city")
+	if c == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("city is empty"))
+		return
+	}
+	we, err := weather.GetWeather(c)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		_, _ = w.Write([]byte(err.Error()))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&we)
+	_, _ = w.Write([]byte(""))
 }

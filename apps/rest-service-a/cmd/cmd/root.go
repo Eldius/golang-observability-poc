@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 			telemetry.WithEnvironment(config.GetEnvironment()),
 			telemetry.WithMetricsEndpoint(config.GetOtelMetricsEndpoint()),
 			telemetry.WithTracesEndpoint(config.GetOtelTraceEndpoint()),
-			telemetry.WithVersion(config.Version),
+			telemetry.WithVersion(config.GetVersion()),
 			telemetry.WithServiceName(config.GetServiceName()),
 		)
 		_ = db.Migrations()

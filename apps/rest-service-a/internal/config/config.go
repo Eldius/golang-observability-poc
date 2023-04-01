@@ -57,3 +57,7 @@ func GetVersion() string {
 
 	return Version
 }
+
+func GetServiceBEndpoint() string {
+	return viper.GetString("integration.service-b.endpoint")
+}

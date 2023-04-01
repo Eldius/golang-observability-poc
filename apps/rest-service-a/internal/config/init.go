@@ -25,6 +25,7 @@ func Setup(cfgFile string) {
 		viper.SetConfigName("rest-api-config")
 	}
 
+	setDefaults()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetEnvPrefix("api")
 
@@ -35,4 +36,8 @@ func Setup(cfgFile string) {
 	if err := viper.ReadInConfig(); err == nil {
 		log.Error().Msgf("Using config file: %s", viper.ConfigFileUsed())
 	}
+}
+
+func setDefaults() {
+	viper.SetDefault("integration.service-b.endpoint", "http://service-b:8080")
 }

@@ -24,7 +24,7 @@ func Setup(cfgFile string) {
 		viper.SetConfigType("yaml")
 		viper.SetConfigName("rest-api-config")
 	}
-
+	setDefaults()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetEnvPrefix("api")
 
@@ -35,4 +35,8 @@ func Setup(cfgFile string) {
 	if err := viper.ReadInConfig(); err == nil {
 		log.Error().Msgf("Using config file: %s", viper.ConfigFileUsed())
 	}
+}
+
+func setDefaults() {
+	viper.SetDefault("integration.weather.endpoint", "https://api.api-ninjas.com/v1/weather")
 }
