@@ -14,6 +14,13 @@ filebeat.autodiscover:
               docker.container.name: service
 processors:
   - add_cloud_metadata: ~
+  - decode_json_fields:
+      fields: ["message"]
+      process_array: false
+      max_depth: 1
+      target: "parsed"
+      overwrite_keys: false
+      add_error_key: true
 
 
 # output:

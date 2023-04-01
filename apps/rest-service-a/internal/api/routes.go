@@ -44,7 +44,7 @@ func homeHandlerfunc(w http.ResponseWriter, r *http.Request) {
 	l.Info().Msgf("testing: %s", r.Context())
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("home"))
+	_, _ = w.Write([]byte("home"))
 
 	l.Info().Msg("get root end")
 }
@@ -67,15 +67,19 @@ func healthHandlerfunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func weatherHandlerfunc(w http.ResponseWriter, r *http.Request) {
+	l := logger.GetLogger(r.Context())
 	q := r.URL.Query()
 	c := q.Get("city")
 	if c == "" {
+		l.Error().Msg("city is empty")
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte("city is empty"))
 		return
 	}
-	we, err := weather.GetWeather(c)
+	we, err := weather.GetWeather(r.Context(), c)
 	if err != nil {
+		l.Error().Err(err).Str("city", c).Msg("service-b integration failed")
+		telemetry.NotifyError(r.Context(), err)
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write([]byte(err.Error()))
 		return

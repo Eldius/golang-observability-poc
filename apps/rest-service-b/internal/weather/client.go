@@ -16,6 +16,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	endpoint, err := url.Parse(config.GetWeatherServiceEndpoint())
 	if err != nil {
+		telemetry.NotifyError(ctx, err)
 		return nil, err
 	}
 	qp := endpoint.Query()
@@ -27,6 +28,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	resp, err := c.Get(endpoint.String())
 	if err != nil {
+		telemetry.NotifyError(ctx, err)
 		return nil, err
 	}
 	defer func() {
@@ -35,6 +37,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	var w Weather
 	if err := json.NewDecoder(resp.Body).Decode(&w); err != nil {
+		telemetry.NotifyError(ctx, err)
 		return nil, err
 	}
 

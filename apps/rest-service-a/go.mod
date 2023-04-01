@@ -3,7 +3,7 @@ module github.com/eldius/golang-observability-poc/apps/rest-service-a
 go 1.20
 
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230401014305-9f6cc4cfb822
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230401133806-12ca82388996
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/httplog v0.2.5
 	github.com/jmoiron/sqlx v1.3.5
@@ -19,7 +19,7 @@ require (
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
-	github.com/felixge/httpsnoop v1.0.2 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-gorp/gorp/v3 v3.1.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -42,6 +42,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	go.opentelemetry.io/contrib v1.0.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.40.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/runtime v0.40.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.14.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric v0.37.0 // indirect

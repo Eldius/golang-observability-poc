@@ -221,6 +221,9 @@ curl -i \
                     }
                 }
             },
+            "parsed": {
+                "type": "object"
+            },
             "tags": {
                 "type": "text",
                 "fields": {
