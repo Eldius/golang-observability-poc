@@ -1,4 +1,6 @@
 
+APPS := $(wildcard apps/*/.)
+
 env-jaeger-down:
 	cd docker-environment/jaeger ; docker compose \
 		-f docker-compose-jaeger.yml \
@@ -64,27 +66,16 @@ service-a-build:
 	cd apps/rest-service-a && \
 		$(MAKE) build
 
-service-a-jaeger: service-a-build-docker
-	docker run \
-		--rm \
-		--name service_a \
-		--network jaeger_default \
-		-m 16m \
-		-p 8080:8080 \
-		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
-		-e "API_OTEL_METRICS_ENDPOINT=jaeger:4317" \
-		-e "API_DB_HOST=postgres" \
-		-e "API_DB_PASS=P@ss" \
-		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_TELEMETRY_DB_ENABLE=true" \
-		-e "API_LOG_LEVEL=trace" \
-			eldius/service-a:dev
+service-a-jaeger-down:
+	-docker kill service_a
+	-docker rm service_a
 
-service-a:
+service-a-jaeger: service-a-jaeger-down service-a-build-docker
 	docker run \
 		--rm \
 		--name service_a \
 		--network jaeger_default \
+		-d \
 		-m 16m \
 		-p 8080:8080 \
 		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
@@ -119,13 +110,14 @@ service-a-opensearch: service-a-opensearch-down
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-a:dev
 
-service-b-opensearch-down:
-	docker kill service_b
-
-service-b-opensearch: service-b-opensearch-down
+service-b-build-docker:
 	cd apps/rest-service-b && \
 		$(MAKE) build-docker
 
+service-b-opensearch-down:
+	docker kill service_b
+
+service-b-opensearch: service-b-build-docker service-b-opensearch-down
 	docker run \
 		--rm \
 		--name service_b \
@@ -139,10 +131,35 @@ service-b-opensearch: service-b-opensearch-down
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-b:dev
 
+service-b-jaeger-down:
+	-docker kill service_b
+	-docker rm service_b
+
+service-b-jaeger: service-b-jaeger-down service-b-build-docker
+	docker run \
+		--rm \
+		--name service_b \
+		--network jaeger_default \
+		-d \
+		-m 16m \
+		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-b:dev
+
+
+
 services-opensearch: service-b-opensearch service-a-opensearch
 	@echo "Services started..."
 
 services-opensearch-down: service-a-opensearch-down service-b-opensearch-down
+	@echo "Services stopped..."
+
+services-jaeger: service-a-jaeger service-b-jaeger
+	@echo "Services started..."
+
+services-jaeger-down: service-a-jaeger-down service-b-jaeger-down
 	@echo "Services stopped..."
 
 service-a-local-jaeger:
@@ -158,7 +175,7 @@ service-a-local-jaeger:
 			--config rest-api-config.yaml
 
 watch-service-a:
-	watch -n 10 'curl -i localhost:8080/ping -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
+	watch -n 10 'curl -i localhost:8080/weather?city=Rio%20de%20Janeiro -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
 
 busybox:
 	docker \
@@ -173,3 +190,8 @@ busybox:
 		--network=opensearch_default \
 		-w /wrksp \
 			alpine
+
+tidy: $(APPS)
+	for dir in $(APPS); do \
+		$(MAKE) -C $$dir tidy; \
+	done

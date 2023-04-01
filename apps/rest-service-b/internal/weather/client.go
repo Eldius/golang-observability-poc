@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/config"
-	"net/http"
 	"net/url"
 )
 
@@ -24,7 +23,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	endpoint.RawQuery = qp.Encode()
 
-	c := http.Client{}
+	c := telemetry.GetHttpClient()
 
 	resp, err := c.Get(endpoint.String())
 	if err != nil {

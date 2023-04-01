@@ -39,5 +39,5 @@ func Setup(cfgFile string) {
 }
 
 func setDefaults() {
-	viper.SetDefault("integration.service-b.endpoint", "http://service-b:8080")
+	viper.SetDefault("integration.service-b.endpoint", "http://service_b:8080")
 }

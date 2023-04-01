@@ -12,7 +12,12 @@ start:
 			--config ./rest-api-config.yaml
 
 build-docker:
-	docker build -t eldius/service-a:dev .
+	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
+	@echo "COMMIT_HASH: $(COMMIT_HASH)"
+	docker build \
+		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
+		-t eldius/service-a:dev \
+			.
 
 tidy:
 	go mod tidy
@@ -23,5 +28,5 @@ build: tidy
 		-v \
 		-a \
 		-ldflags '-extldflags "-static"' \
-		-ldflags "-X \"github.com/eldius/rest-api/rest-service-a/internal/config.Version=$(shell git rev-parse --short HEAD )\"" \
+		-ldflags "-X 'github.com/eldius/rest-api/rest-service-a/internal/config.Version=$(shell git rev-parse --short HEAD )'" \
 		./cmd/

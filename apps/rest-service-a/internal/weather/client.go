@@ -2,13 +2,13 @@ package weather
 
 import (
 	"encoding/json"
+	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
-	"net/http"
 )
 
 func GetWeather(city string) (*Weather, error) {
 
-	c := http.Client{}
+	c := telemetry.GetHttpClient()
 
 	resp, err := c.Get(config.GetServiceBEndpoint())
 	if err != nil {

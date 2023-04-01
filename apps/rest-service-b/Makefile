@@ -12,7 +12,12 @@ start:
 			--config ./rest-api-config.yaml
 
 build-docker:
-	docker build -t eldius/service-b:dev .
+	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
+	@echo "COMMIT_HASH: $(COMMIT_HASH)"
+	docker build \
+		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
+		-t eldius/service-b:dev \
+			.
 
 tidy:
 	go mod tidy

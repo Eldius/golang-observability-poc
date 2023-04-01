@@ -1,6 +1,10 @@
 # builder image
 FROM golang:1.20-alpine as builder
 
+ARG COMMIT_HASH
+
+ENV COMMIT_HASH=${COMMIT_HASH}
+
 WORKDIR /app
 COPY . /app
 
@@ -12,7 +16,7 @@ RUN go build \
     -v \
     -a \
     -ldflags '-extldflags "-static"' \
-    -ldflags "-X \"github.com/eldius/rest-api/rest-service-a/internal/config.Version=$( git rev-parse --short HEAD )\"" \
+    -ldflags "-X 'github.com/eldius/rest-api/rest-service-a/internal/config.Version=${COMMIT_HASH}'" \
       ./cmd/
 
 RUN chmod +x /app/app
