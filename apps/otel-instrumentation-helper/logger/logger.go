@@ -4,6 +4,7 @@ import (
     "context"
     "fmt"
     "github.com/rs/zerolog"
+    "github.com/rs/zerolog/pkgerrors"
     "go.opentelemetry.io/otel/trace"
     "strings"
 )
@@ -54,4 +55,5 @@ func SetupLogs(level string, service string) {
     }
     zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
     serviceName = service
+    zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 }
