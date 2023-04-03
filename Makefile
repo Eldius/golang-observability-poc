@@ -36,18 +36,17 @@ services-opensearch: $(APIS)
 	for dir in $(APIS); do \
 		$(MAKE) -C $$dir docker-up-opensearch; \
 	done
-	# @(MAKE) -C $(PWD)/apps/rest-service-a docker-up-opensearch
-	# @(MAKE) -C $(PWD)/rest-service-b docker-up-opensearch
 
 services-jaeger:
 	@echo "Services starting - Jaeger..."
 	@(MAKE) -C apps/rest-service-a docker-up-jaeger
 	@(MAKE) -C apps/rest-service-b docker-up-jaeger
 
-services-down: service-a-down service-b-down
+services-down:
 	@echo "Services stopping..."
-	@(MAKE) -C apps/rest-service-a docker-down
-	@(MAKE) -C apps/rest-service-b docker-down
+	for dir in $(APIS); do \
+		$(MAKE) -C $$dir docker-down; \
+	done
 
 tidy: $(APPS)
 	for dir in $(APPS); do \
