@@ -1,31 +1,27 @@
-package weather
+package serviceb
 
 import (
     "context"
     "encoding/json"
     "github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/httpclient"
     "github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
-    "github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/config"
+    "github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
     "net/url"
 )
 
 func GetWeather(ctx context.Context, city string) (*Weather, error) {
-    ctx, closer := telemetry.StartSpan(ctx, "GetWeatherIntegration")
-    defer closer()
 
-    telemetry.AddAttribute(ctx, "city", city)
-
-    endpoint, err := url.Parse(config.GetWeatherServiceEndpoint())
+    e, err := url.Parse(config.GetServiceBEndpoint() + "/weather")
     if err != nil {
         telemetry.NotifyError(ctx, err)
         return nil, err
     }
-    qp := endpoint.Query()
-    qp.Set("city", city)
 
-    endpoint.RawQuery = qp.Encode()
+    q := e.Query()
+    q.Set("city", city)
+    e.RawQuery = q.Encode()
 
-    resp, err := httpclient.GetRequest(ctx, endpoint.String())
+    resp, err := httpclient.GetRequest(ctx, e.String())
     if err != nil {
         telemetry.NotifyError(ctx, err)
         return nil, err
@@ -35,8 +31,8 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
     }()
 
     var w Weather
+
     if err := json.NewDecoder(resp.Body).Decode(&w); err != nil {
-        telemetry.NotifyError(ctx, err)
         return nil, err
     }
 

@@ -24,6 +24,10 @@ func AuthApiKey(realm string, db *sqlx.DB) func(next http.Handler) http.Handler 
             //l := logger.GetLogger(r.Context())
 
             ctx := r.Context()
+
+            ctx, f := telemetry.StartSpan(ctx, "UserValidation")
+            defer f()
+
             if r.URL.Path != "/health" {
                 authHeader := strings.Trim(r.Header.Get("Authorization"), " ")
 
@@ -36,7 +40,7 @@ func AuthApiKey(realm string, db *sqlx.DB) func(next http.Handler) http.Handler 
 
                 var results []User
                 if err := db.SelectContext(
-                    r.Context(),
+                    ctx,
                     &results,
                     "select id, name, username, api_key from api_users where api_key = $1",
                     authHeader,
@@ -53,6 +57,8 @@ func AuthApiKey(realm string, db *sqlx.DB) func(next http.Handler) http.Handler 
                     return
                 }
                 ctx = context.WithValue(r.Context(), "user", results[0])
+
+                telemetry.AddAttribute(ctx, "user", results[0].Username)
 
                 log.Debug().Str("api_key", authHeader).Msgf("right query results count: %d", len(results))
             }

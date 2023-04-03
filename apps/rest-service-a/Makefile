@@ -33,3 +33,43 @@ build: tidy
 
 update-library:
 	go get -u github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper@$(shell git rev-parse --short HEAD)
+
+
+docker-down:
+	-docker kill service_a
+	-docker rm service_a
+
+docker-up-jaeger: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_a \
+		--network jaeger_default \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
+		-e "API_OTEL_METRICS_ENDPOINT=jaeger:4317" \
+		-e "API_DB_HOST=postgres" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-a:dev
+
+docker-up-opensearch: docker-down build-docker
+
+	docker run \
+		--rm \
+		--name service_a \
+		--network opensearch_default \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
+		-e "API_OTEL_METRICS_ENDPOINT=data-prepper:21891" \
+		-e "API_DB_HOST=postgres" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-a:dev

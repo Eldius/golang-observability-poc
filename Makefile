@@ -1,6 +1,8 @@
 
 APPS := $(wildcard apps/*/.)
 
+APIS := $(wildcard apps/rest-service*/.)
+
 env-jaeger-down: services-down
 	cd docker-environment/jaeger ; docker compose \
 		-f docker-compose-jaeger.yml \
@@ -29,99 +31,23 @@ env-opensearch: env-opensearch-down
 		-d \
 			--build
 
-service-a-build-docker:
-	cd apps/rest-service-a && \
-		$(MAKE) build-docker
+services-opensearch: $(APIS)
+	@echo "Services starting - Opensearch..."
+	for dir in $(APIS); do \
+		$(MAKE) -C $$dir docker-up-opensearch; \
+	done
+	# @(MAKE) -C $(PWD)/apps/rest-service-a docker-up-opensearch
+	# @(MAKE) -C $(PWD)/rest-service-b docker-up-opensearch
 
-
-service-a-down:
-	-docker kill service_a
-	-docker rm service_a
-
-service-a-jaeger: service-a-down service-a-build-docker
-	docker run \
-		--rm \
-		--name service_a \
-		--network jaeger_default \
-		-d \
-		-m 16m \
-		-p 8080:8080 \
-		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
-		-e "API_OTEL_METRICS_ENDPOINT=jaeger:4317" \
-		-e "API_DB_HOST=postgres" \
-		-e "API_DB_PASS=P@ss" \
-		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_TELEMETRY_DB_ENABLE=true" \
-		-e "API_LOG_LEVEL=trace" \
-			eldius/service-a:dev
-
-service-a-opensearch: service-a-down
-	cd apps/rest-service-a && \
-		$(MAKE) build-docker
-
-	docker run \
-		--rm \
-		--name service_a \
-		--network opensearch_default \
-		-d \
-		-m 16m \
-		-p 8080:8080 \
-		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
-		-e "API_OTEL_METRICS_ENDPOINT=data-prepper:21891" \
-		-e "API_DB_HOST=postgres" \
-		-e "API_DB_PASS=P@ss" \
-		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_TELEMETRY_DB_ENABLE=true" \
-		-e "API_LOG_LEVEL=trace" \
-			eldius/service-a:dev
-
-service-b-build-docker:
-	cd apps/rest-service-b && \
-		$(MAKE) build-docker
-
-service-b-opensearch: service-b-build-docker service-b-down
-	docker run \
-		--rm \
-		--name service_b \
-		--network opensearch_default \
-		-d \
-		-m 16m \
-		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
-		-e "API_OTEL_METRICS_ENDPOINT=data-prepper:21891" \
-		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_LOG_LEVEL=trace" \
-			eldius/service-b:dev
-
-service-b-down:
-	-docker kill service_b
-	-docker rm service_b
-
-service-b-jaeger: service-b-down service-b-build-docker
-	docker run \
-		--rm \
-		--name service_b \
-		--network jaeger_default \
-		-d \
-		-m 16m \
-		-e "API_OTEL_TRACE_ENDPOINT=jaeger:4317" \
-		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_TELEMETRY_DB_ENABLE=true" \
-		-e "API_LOG_LEVEL=trace" \
-			eldius/service-b:dev
-
-
-
-services-opensearch: service-b-opensearch service-a-opensearch
-	@echo "Services started..."
-
-services-jaeger: service-a-jaeger service-b-jaeger
-	@echo "Services started..."
+services-jaeger:
+	@echo "Services starting - Jaeger..."
+	@(MAKE) -C apps/rest-service-a docker-up-jaeger
+	@(MAKE) -C apps/rest-service-b docker-up-jaeger
 
 services-down: service-a-down service-b-down
-	@echo "Services stopped..."
-
-watch-service-a:
-	watch -n 10 'curl -i localhost:8080/weather?city=Rio%20de%20Janeiro -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
+	@echo "Services stopping..."
+	@(MAKE) -C apps/rest-service-a docker-down
+	@(MAKE) -C apps/rest-service-b docker-down
 
 tidy: $(APPS)
 	for dir in $(APPS); do \
@@ -132,3 +58,9 @@ update-library:
 	$(eval CURR_DIR := $(PWD))
 	$(MAKE) -C apps/rest-service-a update-library
 	$(MAKE) -C apps/rest-service-b update-library
+
+weather:
+	http http://localhost:8080/weather city=="Rio de Janeiro"
+
+watch-service-a:
+	watch -n 10 'curl -i localhost:8080/weather?city=Rio%20de%20Janeiro -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
