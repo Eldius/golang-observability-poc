@@ -10,11 +10,12 @@ import (
     "github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/integration/serviceb"
     "github.com/go-chi/chi/v5"
     "github.com/go-chi/httplog"
-    "github.com/rs/zerolog/log"
     "net/http"
 )
 
 func Start(port int) {
+
+    l := logger.Logger()
 
     httpLogger := httplog.NewLogger(config.GetServiceName(), httplog.Options{
         JSON: true,
@@ -31,7 +32,7 @@ func Start(port int) {
     r.Get("/health", healthHandlerfunc)
     r.Get("/weather", weatherHandlerfunc)
 
-    log.Info().
+    l.Info().
         Int("port", port).
         Msg("starting")
     panic(http.ListenAndServe(fmt.Sprintf(":%d", port), r))
