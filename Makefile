@@ -39,8 +39,10 @@ services-opensearch: $(APIS)
 
 services-jaeger:
 	@echo "Services starting - Jaeger..."
-	@(MAKE) -C apps/rest-service-a docker-up-jaeger
-	@(MAKE) -C apps/rest-service-b docker-up-jaeger
+	@echo "Services starting - Opensearch..."
+	for dir in $(APIS); do \
+		$(MAKE) -C $$dir docker-up-jaeger; \
+	done
 
 services-down:
 	@echo "Services stopping..."
