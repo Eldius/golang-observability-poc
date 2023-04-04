@@ -3,7 +3,7 @@ module github.com/eldius/golang-observability-poc/apps/rest-service-a
 go 1.20
 
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230403211227-763e46343c40
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230404132655-436e1d04b1b5
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/httplog v0.2.5
 	github.com/jmoiron/sqlx v1.3.5
@@ -35,6 +35,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/riandyrn/otelchi v0.5.1 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
