@@ -3,10 +3,12 @@ package weather
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/httpclient"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/config"
+	"io"
 	"net/url"
 )
 
@@ -24,11 +26,12 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 		l.Error().Err(err).Msg("error parsing endpoint")
 		return nil, err
 	}
-	qp := endpoint.Query()
-	qp.Set("city", city)
+	q := endpoint.Query()
+	q.Set("city", city)
 
-	endpoint.RawQuery = qp.Encode()
+	endpoint.RawQuery = q.Encode()
 
+	l.Debug().Str("api_key", config.GetWeatherServiceApiKey()).Msg("integrating")
 	resp, err := httpclient.GetRequest(ctx, endpoint.String(), httpclient.WithHeader("x-api-key", config.GetWeatherServiceApiKey()))
 	if err != nil {
 		telemetry.NotifyError(ctx, err)
@@ -39,6 +42,10 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 		_ = resp.Body.Close()
 	}()
 
+	if resp.StatusCode/100 != 2 {
+		b, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("integration error %d: %s", resp.StatusCode, b)
+	}
 	var w Weather
 	if err := json.NewDecoder(resp.Body).Decode(&w); err != nil {
 		telemetry.NotifyError(ctx, err)

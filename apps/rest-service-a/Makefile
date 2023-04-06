@@ -73,3 +73,6 @@ docker-up-opensearch: docker-down build-docker
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-a:dev
+
+lint:
+	golangci-lint run --config=~/.golangci.yaml ./...

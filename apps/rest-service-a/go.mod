@@ -3,7 +3,7 @@ module github.com/eldius/golang-observability-poc/apps/rest-service-a
 go 1.20
 
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230404132655-436e1d04b1b5
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230406214432-7873efeafb2c
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/httplog v0.2.5
 	github.com/jmoiron/sqlx v1.3.5

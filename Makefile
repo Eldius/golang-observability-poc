@@ -55,6 +55,11 @@ tidy: $(APPS)
 		$(MAKE) -C $$dir tidy; \
 	done
 
+lint: $(APPS)
+	for dir in $(APPS); do \
+		$(MAKE) -C $$dir ling; \
+	done
+
 update-library:
 	$(eval CURR_DIR := $(PWD))
 	$(MAKE) -C apps/rest-service-a update-library

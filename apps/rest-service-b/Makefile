@@ -64,3 +64,6 @@ docker-up-jaeger: docker-down build-docker
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_API_KEY)" \
 			eldius/service-b:dev
+
+lint:
+	golangci-lint run --config=~/.golangci.yaml ./...
