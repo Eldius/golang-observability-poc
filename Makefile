@@ -57,7 +57,8 @@ tidy: $(APPS)
 
 lint: $(APPS)
 	for dir in $(APPS); do \
-		$(MAKE) -C $$dir ling; \
+		echo "linting $$dir..."; \
+		$(MAKE) -C $$dir lint; \
 	done
 
 update-library:
