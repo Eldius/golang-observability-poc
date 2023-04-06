@@ -2,9 +2,9 @@ package telemetry
 
 import (
 	"context"
+	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/riandyrn/otelchi"
-	"github.com/rs/zerolog/log"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -34,6 +34,7 @@ var (
 )
 
 func InitTelemetry(opts ...Option) {
+	l := logger.Logger()
 	opt := &options{
 		serviceName:     "default-name",
 		version:         "v0.0.0",
@@ -45,14 +46,14 @@ func InitTelemetry(opts ...Option) {
 	for _, f := range opts {
 		opt = f(opt)
 	}
-	log.Debug().Msg("starting telemetry providers")
+	l.Debug().Msg("starting telemetry providers")
 
 	telemetryOpts = opt
 
 	initMetrics(opt)
 	initTracer(opt)
 
-	log.Debug().Msg("ending telemetry providers")
+	l.Debug().Msg("ending telemetry providers")
 }
 
 // WithServiceName configures service name
@@ -105,7 +106,8 @@ func WithContext(c context.Context) Option {
 
 func SetupRestTracing(r *chi.Mux) {
 	if telemetryOpts == nil {
-		log.Print("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
+		l := logger.Logger()
+		l.Warn().Msg("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
 		return
 	}
 	r.Use(otelchi.Middleware(telemetryOpts.serviceName, otelchi.WithChiRoutes(r)))

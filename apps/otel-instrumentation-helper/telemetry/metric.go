@@ -2,8 +2,8 @@ package telemetry
 
 import (
 	"context"
+	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -22,7 +22,8 @@ import (
 )
 
 func initMetrics(opt *options) {
-	log.Debug().Msg("init tracer begin")
+	l := logger.Logger()
+	l.Debug().Msg("init tracer begin")
 
 	// initialize trace provider
 	mp := initMetricsProvider(opt)
@@ -31,15 +32,15 @@ func initMetrics(opt *options) {
 	global.SetMeterProvider(mp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
-	log.Debug().Msg("finished metrics provider configuration")
+	l.Debug().Msg("finished metrics provider configuration")
 
-	log.Debug().Msg("starting runtime instrumentation")
+	l.Debug().Msg("starting runtime instrumentation")
 	if err := runtime.Start(runtime.WithMinimumReadMemStatsInterval(time.Second)); err != nil {
-		log.Warn().Err(err).Msg("failed to start runtime monitoring")
+		l.Warn().Err(err).Msg("failed to start runtime monitoring")
 		return
 	}
 
-	log.Debug().Msg("ending metrics provider")
+	l.Debug().Msg("ending metrics provider")
 
 	go waitMetrics(mp)
 }
@@ -89,7 +90,8 @@ func newStdoutWriter(t string, opt *options) io.Writer {
 }
 
 func otelMetricsExporter(opt *options) metric.Exporter {
-	log.Debug().Msgf("configuring metric export for '%s'", opt.metricsEndpoint)
+	l := logger.Logger()
+	l.Debug().Msgf("configuring metric export for '%s'", opt.metricsEndpoint)
 
 	var opts []otlpmetricgrpc.Option
 	opts = append(opts, otlpmetricgrpc.WithInsecure())
@@ -103,7 +105,7 @@ func otelMetricsExporter(opt *options) metric.Exporter {
 		opts...,
 	)
 	if err != nil {
-		log.Warn().Err(err).Msg("failed to configure otel metrics exporter")
+		l.Warn().Err(err).Msg("failed to configure otel metrics exporter")
 		return nil
 	}
 
@@ -113,8 +115,9 @@ func otelMetricsExporter(opt *options) metric.Exporter {
 func waitMetrics(mp otelmetric.MeterProvider) {
 	defer func() {
 		if p, ok := mp.(*metric.MeterProvider); ok {
+			l := logger.Logger()
 			if err := p.Shutdown(context.Background()); err != nil {
-				log.Debug().Err(err).Msg("error shutting down metric provider")
+				l.Debug().Err(err).Msg("error shutting down metric provider")
 			}
 		}
 	}()
