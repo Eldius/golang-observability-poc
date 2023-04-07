@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/rs/zerolog/log"
+	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
@@ -34,7 +34,8 @@ func Setup(cfgFile string) {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		log.Error().Msgf("Using config file: %s", viper.ConfigFileUsed())
+		l := logger.Logger()
+		l.Info().Msgf("Using config file: %s", viper.ConfigFileUsed())
 	}
 }
 

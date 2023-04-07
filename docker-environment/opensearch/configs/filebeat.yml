@@ -2,16 +2,16 @@
 filebeat.autodiscover:
   providers:
     - type: docker
-      exclude_lines: [ "^filebeat", "^postgres", "^data-prepper", "^opensearch", "^opensearch", "^logstash" ]
+      # exclude_lines: [ "^filebeat", "^postgres", "^data-prepper", "^opensearch", "^opensearch", "^logstash" ]
       templates:
         - config:
           - type: container
-            exclude_lines: [ "^filebeat", "^postgres", "^data-prepper", "^opensearch", "^opensearch", "^logstash" ]
+            # exclude_lines: [ "^docker.elastic.co/beats/filebeat", "^postgres", "^opensearchproject/data-prepper", "^opensearchproject/opensearch", "^opensearchproject/opensearch-dashboards", "^opensearchproject/logstash-oss-with-opensearch-output-plugin" ]
             paths:
               - /var/lib/docker/containers/${data.docker.container.id}/*.log
           condition:
             contains:
-              docker.container.name: service
+              docker.container.image.name: eldius/service-
 processors:
   - add_cloud_metadata: ~
   - decode_json_fields:
