@@ -38,24 +38,33 @@ func SetupLogs(level string, service string) {
 	fmt.Printf("configuring log level: '%s'\n", logLevel)
 	switch logLevel {
 	case zerolog.LevelPanicValue:
+		fmt.Println("panic")
 		zerolog.SetGlobalLevel(zerolog.PanicLevel)
 	case zerolog.LevelFatalValue:
+		fmt.Println("fatal")
 		zerolog.SetGlobalLevel(zerolog.FatalLevel)
 	case zerolog.LevelErrorValue:
+		fmt.Println("error")
 		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
 	case zerolog.LevelWarnValue:
+		fmt.Println("warn")
 		zerolog.SetGlobalLevel(zerolog.WarnLevel)
 	case zerolog.LevelInfoValue:
+		fmt.Println("info")
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	case zerolog.LevelDebugValue:
+		fmt.Println("debug")
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	case zerolog.LevelTraceValue:
+		fmt.Println("trace")
 		zerolog.SetGlobalLevel(zerolog.TraceLevel)
 	default:
+		fmt.Println("default")
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	serviceName = service
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 	log.Info().Str("setup_log_level", zerolog.GlobalLevel().String()).Msg("SetupLogsEnd")
+	fmt.Println("global log level:", zerolog.GlobalLevel().String())
 }
