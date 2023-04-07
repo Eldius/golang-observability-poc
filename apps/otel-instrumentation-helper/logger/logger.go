@@ -57,5 +57,5 @@ func SetupLogs(level string, service string) {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	serviceName = service
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
-	log.Info().Str("setup_log_level", zerolog.GlobalLevel().String())
+	log.Info().Str("setup_log_level", zerolog.GlobalLevel().String()).Msg("SetupLogsEnd")
 }
