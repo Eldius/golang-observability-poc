@@ -37,19 +37,19 @@ func SetupLogs(level string, service string) {
 	logLevel := strings.ToLower(level)
 	fmt.Printf("configuring log level: '%s'\n", logLevel)
 	switch logLevel {
-	case "panic":
+	case zerolog.LevelPanicValue:
 		zerolog.SetGlobalLevel(zerolog.PanicLevel)
-	case "fatal":
+	case zerolog.LevelFatalValue:
 		zerolog.SetGlobalLevel(zerolog.FatalLevel)
-	case "error":
+	case zerolog.LevelErrorValue:
 		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
-	case "warn":
+	case zerolog.LevelWarnValue:
 		zerolog.SetGlobalLevel(zerolog.WarnLevel)
-	case "info":
+	case zerolog.LevelInfoValue:
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	case "debug":
+	case zerolog.LevelDebugValue:
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	case "trace":
+	case zerolog.LevelTraceValue:
 		zerolog.SetGlobalLevel(zerolog.TraceLevel)
 	default:
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
