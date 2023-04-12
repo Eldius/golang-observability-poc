@@ -2,16 +2,15 @@ package logger
 
 import (
 	"context"
+	"strings"
+
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
 	"go.opentelemetry.io/otel/trace"
-	"strings"
 )
 
-var (
-	serviceName string
-)
+var serviceName string
 
 func GetLogger(ctx context.Context) zerolog.Logger {
 	span := trace.SpanFromContext(ctx)
@@ -32,7 +31,7 @@ func Logger() zerolog.Logger {
 		Logger().Level(zerolog.GlobalLevel())
 }
 
-func SetupLogs(level string, service string) {
+func SetupLogs(level, service string) {
 	logLevel := strings.ToLower(level)
 	switch logLevel {
 	case zerolog.LevelPanicValue:
@@ -54,6 +53,8 @@ func SetupLogs(level string, service string) {
 	}
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	serviceName = service
-	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
+
+	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack //nolint:reassign // setting stack traces marshaller
+
 	log.Info().Str("setup_log_level", zerolog.GlobalLevel().String()).Msg("SetupLogsEnd")
 }

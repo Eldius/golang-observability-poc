@@ -2,11 +2,13 @@ package telemetry
 
 import (
 	"context"
+	"os"
+	"os/signal"
+
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
-	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -14,8 +16,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"os"
-	"os/signal"
 )
 
 var Tracer trace.Tracer
@@ -67,19 +67,6 @@ func initTracerProvider(opt *options) trace.TracerProvider {
 	return provider
 }
 
-func stdoutTraceExporter(opt *options) sdktrace.SpanExporter {
-	l := logger.Logger()
-	l.Debug().Msg("configuring stdout trace export")
-
-	var err error
-	exporter, err := stdouttrace.New(stdouttrace.WithPrettyPrint(), stdouttrace.WithWriter(newStdoutWriter("otel_tracing", opt)))
-	if err != nil {
-		l.Fatal().Err(err).Msg("failed to setup exporter")
-	}
-
-	return exporter
-}
-
 func otelTraceExporter(opt *options) sdktrace.SpanExporter {
 	l := logger.Logger()
 	l.Debug().Msgf("configuring trace export for '%s'", opt.tracesEndpoint)
@@ -117,7 +104,6 @@ func waitTraces(tp trace.TracerProvider) {
 	defer cancel()
 
 	<-ctx.Done()
-
 }
 
 func NotifyError(ctx context.Context, err error) {

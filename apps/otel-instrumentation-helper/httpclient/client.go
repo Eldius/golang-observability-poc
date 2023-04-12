@@ -6,11 +6,9 @@ import (
 	"net/http"
 )
 
-var (
-	defaultClient = &http.Client{
-		Transport: otelhttp.NewTransport(http.DefaultTransport),
-	}
-)
+var defaultClient = &http.Client{
+	Transport: otelhttp.NewTransport(http.DefaultTransport),
+}
 
 type options struct {
 	headers map[string]interface{}
@@ -25,12 +23,12 @@ func WithHeader(k, v string) Option {
 	}
 }
 
-func MakeRequest(ctx context.Context, url string, method string, opts ...Option) (*http.Response, error) {
+func MakeRequest(ctx context.Context, url, method string, opts ...Option) (*http.Response, error) {
 	opt := &options{headers: make(map[string]interface{})}
 	for _, o := range opts {
 		opt = o(opt)
 	}
-	req, err := http.NewRequestWithContext(ctx, method, url, nil)
+	req, err := http.NewRequestWithContext(ctx, method, url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
@@ -47,6 +45,6 @@ func GetRequest(ctx context.Context, url string, opts ...Option) (*http.Response
 	return MakeRequest(ctx, url, http.MethodGet, opts...)
 }
 
-func GetHttpClient() *http.Client {
+func GetHTTPClient() *http.Client {
 	return defaultClient
 }

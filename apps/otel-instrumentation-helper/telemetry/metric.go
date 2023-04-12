@@ -2,8 +2,11 @@ package telemetry
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"time"
+
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
-	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -15,10 +18,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.18.0"
 	"google.golang.org/grpc/encoding/gzip"
-	"io"
-	"os"
-	"os/signal"
-	"time"
 )
 
 func initMetrics(opt *options) {
@@ -70,35 +69,17 @@ func defaultResources(opt *options) *resource.Resource {
 	return res
 }
 
-type otelStdoutExporterWriter struct {
-	l zerolog.Logger
-	t string
-}
-
-func (e *otelStdoutExporterWriter) Write(p []byte) (n int, err error) {
-	e.l.Debug().Str("type", e.t).Msg(string(p))
-	return len(p), nil
-}
-
-func newStdoutWriter(t string, opt *options) io.Writer {
-	return &otelStdoutExporterWriter{
-		l: zerolog.Ctx(opt.ctx).
-			With().
-			Logger().Level(zerolog.GlobalLevel()),
-		t: t,
-	}
-}
-
 func otelMetricsExporter(opt *options) metric.Exporter {
 	l := logger.Logger()
 	l.Debug().Msgf("configuring metric export for '%s'", opt.metricsEndpoint)
 
 	var opts []otlpmetricgrpc.Option
-	opts = append(opts, otlpmetricgrpc.WithInsecure())
-	//opts = append(opts, otlpmetricgrpc.WithGRPCConn(conn))
-	opts = append(opts, otlpmetricgrpc.WithEndpoint(opt.metricsEndpoint))
-	opts = append(opts, otlpmetricgrpc.WithCompressor(gzip.Name))
-	opts = append(opts, otlpmetricgrpc.WithTimeout(10*time.Second))
+
+	opts = append(opts,
+		otlpmetricgrpc.WithInsecure(),
+		otlpmetricgrpc.WithEndpoint(opt.metricsEndpoint),
+		otlpmetricgrpc.WithCompressor(gzip.Name),
+		otlpmetricgrpc.WithTimeout(10*time.Second))
 
 	exporter, err := otlpmetricgrpc.New(
 		opt.ctx,
@@ -125,5 +106,4 @@ func waitMetrics(mp otelmetric.MeterProvider) {
 	defer cancel()
 
 	<-ctx.Done()
-
 }

@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"context"
+
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/riandyrn/otelchi"
@@ -16,7 +17,6 @@ type options struct {
 	metricsEndpoint string
 	tracesEndpoint  string
 	ctx             context.Context
-	configure       bool
 }
 
 func (o *options) MetricsEnabled() bool {
@@ -29,9 +29,9 @@ func (o *options) TracesEnabled() bool {
 
 type Option func(o *options) *options
 
-var (
-	telemetryOpts *options
-)
+type CloserFunc func()
+
+var telemetryOpts *options
 
 func InitTelemetry(opts ...Option) {
 	l := logger.Logger()
@@ -56,7 +56,7 @@ func InitTelemetry(opts ...Option) {
 	l.Debug().Msg("ending telemetry providers")
 }
 
-// WithServiceName configures service name
+// WithServiceName configures service name.
 func WithServiceName(n string) Option {
 	return func(o *options) *options {
 		o.serviceName = n
@@ -64,7 +64,7 @@ func WithServiceName(n string) Option {
 	}
 }
 
-// WithVersion configures service version
+// WithVersion configures service version.
 func WithVersion(v string) Option {
 	return func(o *options) *options {
 		o.version = v
@@ -72,7 +72,7 @@ func WithVersion(v string) Option {
 	}
 }
 
-// WithEnvironment configures environment name
+// WithEnvironment configures environment name.
 func WithEnvironment(e string) Option {
 	return func(o *options) *options {
 		o.env = e
@@ -80,7 +80,7 @@ func WithEnvironment(e string) Option {
 	}
 }
 
-// WithMetricsEndpoint configures otel metrics endpoint
+// WithMetricsEndpoint configures otel metrics endpoint.
 func WithMetricsEndpoint(e string) Option {
 	return func(o *options) *options {
 		o.metricsEndpoint = e
@@ -88,7 +88,7 @@ func WithMetricsEndpoint(e string) Option {
 	}
 }
 
-// WithTracesEndpoint configures otel traces endpoint
+// WithTracesEndpoint configures otel traces endpoint.
 func WithTracesEndpoint(e string) Option {
 	return func(o *options) *options {
 		o.tracesEndpoint = e
@@ -96,7 +96,7 @@ func WithTracesEndpoint(e string) Option {
 	}
 }
 
-// WithContext set's up the configuration context
+// WithContext set's up the configuration context.
 func WithContext(c context.Context) Option {
 	return func(o *options) *options {
 		o.ctx = c
@@ -113,7 +113,7 @@ func SetupRestTracing(r *chi.Mux) {
 	r.Use(otelchi.Middleware(telemetryOpts.serviceName, otelchi.WithChiRoutes(r)))
 }
 
-func StartSpan(ctx context.Context, name string) (context.Context, func()) {
+func StartSpan(ctx context.Context, name string) (context.Context, CloserFunc) {
 	c, s := Tracer.Start(ctx, name)
 	return c, func() {
 		s.End()
