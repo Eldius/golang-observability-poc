@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// Setup initializes app configuration
+// Setup initializes app configuration.
 func Setup(cfgFile string) {
 	if cfgFile != "" {
 		// Use config file from the flag.
@@ -28,7 +28,6 @@ func Setup(cfgFile string) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetEnvPrefix("api")
 
-	//viper.SetDefault("log.level", "DEBUG")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
@@ -40,4 +39,5 @@ func Setup(cfgFile string) {
 
 func setDefaults() {
 	viper.SetDefault("integration.weather.endpoint", "https://api.api-ninjas.com/v1/weather")
+	viper.SetDefault("log.level", "DEBUG")
 }

@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// Setup initializes app configuration
+// Setup initializes app configuration.
 func Setup(cfgFile string) {
 	if cfgFile != "" {
 		// Use config file from the flag.
@@ -28,8 +28,6 @@ func Setup(cfgFile string) {
 	setDefaults()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetEnvPrefix("api")
-
-	//viper.SetDefault("log.level", "DEBUG")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
@@ -41,4 +39,5 @@ func Setup(cfgFile string) {
 
 func setDefaults() {
 	viper.SetDefault("integration.service-b.endpoint", "http://service_b:8080")
+	viper.SetDefault("log.level", "DEBUG")
 }

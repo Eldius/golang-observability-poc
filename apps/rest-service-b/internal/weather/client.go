@@ -31,8 +31,8 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	endpoint.RawQuery = q.Encode()
 
-	l.Info().Str("api_key", config.GetWeatherServiceApiKey()).Msg("integrating")
-	resp, err := httpclient.GetRequest(ctx, endpoint.String(), httpclient.WithHeader("x-api-key", config.GetWeatherServiceApiKey()))
+	l.Info().Str("api_key", config.GetWeatherServiceAPIKey()).Msg("integrating")
+	resp, err := httpclient.GetRequest(ctx, endpoint.String(), httpclient.WithHeader("x-api-key", config.GetWeatherServiceAPIKey()))
 	if err != nil {
 		telemetry.NotifyError(ctx, err)
 		l.Error().Err(err).Msg("error requesting weather api")
@@ -43,7 +43,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 	}()
 
 	if resp.StatusCode/100 != 2 {
-		b, _ := io.ReadAll(resp.Body)
+		b, _ := io.ReadAll(resp.Body) //nolint:errcheck // ignoring error
 		return nil, fmt.Errorf("integration error %d: %s", resp.StatusCode, b)
 	}
 	var w Weather

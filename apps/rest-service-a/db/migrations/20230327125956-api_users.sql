@@ -1,4 +1,3 @@
-
 -- +migrate Up
 
 insert into api_users (name, username, api_key)
@@ -15,6 +14,6 @@ values ('anyone user', 'anyone', '8eef6b10-cb7d-11ed-8efd-00155d485640');
 
 -- +migrate Down
 
-delete from api_users
-where
-    username in ('test001', 'happy', 'someone', 'anyone');
+delete
+from api_users
+where username in ('test001', 'happy', 'someone', 'anyone');

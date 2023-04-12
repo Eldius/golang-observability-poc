@@ -62,6 +62,6 @@ func GetWeatherServiceEndpoint() string {
 	return viper.GetString("integration.weather.endpoint")
 }
 
-func GetWeatherServiceApiKey() string {
+func GetWeatherServiceAPIKey() string {
 	return viper.GetString("integration.weather.apikey")
 }

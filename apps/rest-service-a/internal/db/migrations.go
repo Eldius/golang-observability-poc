@@ -1,11 +1,9 @@
 package db
 
 import (
-	"context"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
-	_ "github.com/lib/pq"
-	"github.com/rs/zerolog"
+	_ "github.com/lib/pq" // we need the Postgres driver
 	migrate "github.com/rubenv/sql-migrate"
 )
 
@@ -19,39 +17,19 @@ func Migrations() error {
 		}
 
 		migInfo, err := migrations.FindMigrations()
+		if err != nil {
+			l.Error().Err(err).Msg("failed to find migrations")
+			return err
+		}
 		l.Info().Int("migrations_to_do", len(migInfo)).Msgf("running migrations begin")
 
 		n, err := migrate.Exec(db.DB, "postgres", migrations, migrate.Up)
 		if err != nil {
-			// Handle errors!
 			l.Error().Err(err).Msg("failed to run migrations")
+			return err
 		}
 		l.Info().Int("migrations_done", n).Msgf("running migrations end")
 	}
 
 	return nil
-}
-
-type migrationLogger struct {
-	l *zerolog.Logger
-	v bool
-}
-
-func (m *migrationLogger) Printf(format string, v ...interface{}) {
-	m.l.Debug().Msgf(format, v)
-}
-func (m *migrationLogger) Verbose() bool {
-	return m.v
-}
-
-func newMigrationLogger() *migrationLogger {
-	l := logger.GetLogger(context.Background())
-	return &migrationLogger{
-		l: &l,
-		v: true,
-	}
-}
-
-func isMigrationLogEnabled() bool {
-	return zerolog.GlobalLevel() >= zerolog.DebugLevel
 }
