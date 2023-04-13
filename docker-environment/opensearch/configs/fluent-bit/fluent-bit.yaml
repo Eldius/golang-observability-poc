@@ -1,0 +1,17 @@
+# setting up a local environment variable
+env:
+  flush_interval: 1
+
+# service configuration
+service:
+  flush: ${flush_interval}
+  log_level: info
+  http_server: on
+
+pipeline:
+  inputs:
+    - name: forward
+      tag: "custom-logs"
+  outputs:
+    - name: stdout
+      match: "*"

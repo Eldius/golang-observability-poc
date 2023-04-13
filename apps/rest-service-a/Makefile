@@ -65,6 +65,8 @@ docker-up-opensearch: docker-down build-docker
 		-d \
 		-m 16m \
 		-p 8080:8080 \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=localhost:24224 \
 		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
 		-e "API_OTEL_METRICS_ENDPOINT=data-prepper:21891" \
 		-e "API_DB_HOST=postgres" \
