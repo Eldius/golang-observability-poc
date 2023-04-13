@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-prepper-deployment
+  labels:
+    app: data-prepper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-prepper
+  template:
+    metadata:
+      labels:
+        app: data-prepper
+    spec:
+      containers:
+        - name: data-prepper
+          image: opensearchproject/data-prepper:2
+          ports:
+            - containerPort: 21890
+            - containerPort: 21891
+            - containerPort: 2021
+          resources:
+            limits:
+              memory: 256M
+            requests:
+              memory: 256M
+          volumeMounts:
+          - name: data-prepper-configs
+            mountPath: /usr/share/data-prepper
+            readOnly: true
+      volumes:
+        - name: data-prepper-configs
+          configMap:
+            name: data-prepper-configs
+            items:
+            - key: root-ca.pem
+              path: root-ca.pem
+            - key: data-prepper-config.yaml
+              path: config/data-prepper-config.yaml
+            - key: pipelines.yaml
+              path: pipelines/pipelines.yaml
+        # - name: root-ca-pem
+        #   configMap:
+        #     name: data-prepper-configs
+        #     items:
+        #     - key: root-ca.pem
+        #       path: root-ca.pem
+        # - name: data-prepper-config-yaml
+        #   configMap:
+        #     name: data-prepper-configs
+        #     items:
+        #     - key: data-prepper-config.yaml
+        #       path: data-prepper-config.yaml
+        # - name: pipelines-yaml
+        #   configMap:
+        #     name: data-prepper-configs
+        #     items:
+        #     - key: pipelines.yaml
+        #       path: pipelines.yaml
+      restartPolicy: Always

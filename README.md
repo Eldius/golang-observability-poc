@@ -64,7 +64,7 @@ conexões de banco em uso e disponíveis, etc.
 - [opensearchproject/logstash-oss-with-opensearch-output-plugin - DockerHub](https://hub.docker.com/r/opensearchproject/logstash-oss-with-opensearch-output-plugin)
 - [Defining processors - Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html)
 - [Exported fields - Filebeat Processors](https://www.elastic.co/guide/en/beats/filebeat/current/exported-fields.html)
-
+- [Migrating from Logstash](https://opensearch.org/docs/latest/data-prepper/migrating-from-logstash-data-prepper/)
 
 ### providers Terraform para Elasticsearch/Opensearch ###
 
