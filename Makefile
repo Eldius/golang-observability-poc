@@ -79,3 +79,22 @@ exporting:
 		-p 4900:4900 \
 		-v ${PWD}/docker-environment/opensearch/configs/data:/usr/share/data-prepper/data \
 		-v ${PWD}/docker-environment/opensearch/configs/logstash.conf:/usr/share/data-prepper/pipelines/pipelines.conf opensearchproject/data-prepper:latest
+
+test-logs:
+	docker run \
+		--rm \
+		--name service_a \
+		--network opensearch_default \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=localhost:24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=data-prepper:21890" \
+		-e "API_OTEL_METRICS_ENDPOINT=data-prepper:21891" \
+		-e "API_DB_HOST=postgres" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-a:dev

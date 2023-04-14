@@ -22,7 +22,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 20s
   opensearch:
     container_name: node-0.example.com
     image: opensearchproject/opensearch:2
@@ -43,10 +43,10 @@ services:
     mem_limit: 1.5g
     healthcheck:
       test: curl -i --insecure -XGET https://localhost:9200/_cluster/health -u 'admin:admin' | grep -E '("status":"yellow"|"status":"green")'
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 20s
   dashboards:
     image: opensearchproject/opensearch-dashboards:2
     container_name: opensearch-dashboards
@@ -73,6 +73,7 @@ services:
     volumes:
       - ./configs/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       # - ./configs/fluent-bit/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml
+      - ./configs/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf
   init:
     image: hashicorp/terraform
     container_name: init

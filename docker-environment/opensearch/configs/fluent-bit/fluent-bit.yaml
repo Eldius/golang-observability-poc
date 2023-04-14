@@ -11,7 +11,20 @@ service:
 pipeline:
   inputs:
     - name: forward
-      tag: "custom-logs"
+      port: 24224
+      tag_prefix: yaml
+  parser:
+    - name: docker
+      format: json
+      time_key: time
+      time_format: "%Y-%m-%dT%H:%M:%S %z"
+      match: "*"
   outputs:
     - name: stdout
       match: "*"
+    - name: http
+      match: "*"
+      host: data-prepper
+      port: 2021
+      uri: /log/ingest
+      format: json
