@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: data-prepper
-          image: opensearchproject/data-prepper:2
+          image: eldius/opensearch-data-prepper:2.2.0-SNAPSHOT
           ports:
             - containerPort: 21890
             - containerPort: 21891
@@ -29,30 +29,30 @@ spec:
               memory: 256M
           volumeMounts:
           # - name: root-ca-pem
-          #   mountPath: /usr/share/data-prepper
-          #   readOnly: true
+          #  mountPath: /usr/share/data-prepper/
+          #  readOnly: true
           - name: data-prepper-config-yaml
-            mountPath: /usr/share/data-prepper/config
-            readOnly: true
+            mountPath: /usr/share/data-prepper/config/
+            #readOnly: true
           - name: pipelines-yaml
             mountPath: /usr/share/data-prepper/pipelines
-            readOnly: true
+            #readOnly: true
       volumes:
         - name: root-ca-pem
           configMap:
-            name: data-prepper-configs
+            name: data-prepper-config-files
             items:
             - key: root-ca.pem
               path: root-ca.pem
         - name: data-prepper-config-yaml
           configMap:
-            name: data-prepper-configs
+            name: data-prepper-config-files
             items:
             - key: data-prepper-config.yaml
               path: data-prepper-config.yaml
         - name: pipelines-yaml
           configMap:
-            name: data-prepper-configs
+            name: data-prepper-config-files
             items:
             - key: pipelines.yaml
               path: pipelines.yaml

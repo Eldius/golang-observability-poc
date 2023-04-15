@@ -27,7 +27,7 @@ data:
             - otel_trace_raw:
         sink:
             - opensearch:
-                hosts: [ "https://opensearch:9200" ]
+                hosts: [ "https://node-0.example.com:9200" ]
                 cert: "/usr/share/data-prepper/root-ca.pem"
                 username: admin
                 password: admin
@@ -62,8 +62,31 @@ data:
                 cert: "/usr/share/data-prepper/root-ca.pem"
                 username: admin
                 password: admin
-                index: "metrics-otel-v1-%{yyyy.MM.dd}"
-                indexAlias: "metrics-otel-v1"
+                index: "metrics-otel-v1"
+                # index: "metrics-otel-v1-%{yyyy.MM.dd}"
+                # indexAlias: "metrics-otel-v1"
+                # index_type: metrics-analytics-raw
+
+        log-pipeline:
+        source:
+            http:
+            ssl: false
+            port: 2021
+            health_check_service: true
+            unauthenticated_health_check: true
+            path: /log/ingest
+            authentication:
+                unauthenticated:
+        sink:
+            - opensearch:
+                hosts: [ "https://node-0.example.com:9200" ]
+                insecure: true
+                username: admin
+                password: admin
+                index: "custom-application-logs"
+                # index: "custom-logs-%{yyyy.MM.dd}"
+                # indexAlias: "custom-logs"
+
   root-ca.pem: |
     -----BEGIN CERTIFICATE-----
     MIID/jCCAuagAwIBAgIBATANBgkqhkiG9w0BAQsFADCBjzETMBEGCgmSJomT8ixk

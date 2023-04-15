@@ -6,12 +6,15 @@ echo "## creating index ##"
 echo "####################"
 echo ""
 
+#CLUSTER_HOST="192.168.1.194"
+CLUSTER_HOST="192.168.0.36"
+
 curl -i \
     --fail \
     --insecure \
     -X PUT \
     -u 'admin:admin' \
-    'https://192.168.1.194:9200/application-logs-00001' \
+    "https://${CLUSTER_HOST}:9200/application-logs-00001" \
     -H 'Content-Type: application/json' \
     -d '{
     "settings": {
@@ -251,7 +254,7 @@ curl -i \
     --insecure \
     -X POST \
     -u 'admin:admin' \
-    'http://192.168.1.194:5601/api/saved_objects/index-pattern/application-logs' \
+    "http://${CLUSTER_HOST}:5601/api/saved_objects/index-pattern/application-logs" \
     -H 'osd-xsrf: true' \
     -H 'Content-Type: application/json' \
     -H 'securitytenant: global' \
@@ -270,7 +273,7 @@ curl -i \
         --insecure \
         -X POST \
         -u 'admin:admin' \
-        'http://192.168.1.194:5601/api/saved_objects/index-pattern/metrics-otel-v1-*' \
+        "http://${CLUSTER_HOST}:5601/api/saved_objects/index-pattern/metrics-otel-v1-*" \
         -H 'osd-xsrf: true' \
         -H 'Content-Type: application/json' \
         -H 'securitytenant: global' \

@@ -98,3 +98,13 @@ test-logs:
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-a:dev
+
+test:
+	kubectl \
+		run test-alpine \
+		--image=eldius/opensearch-data-prepper:2.2.0-SNAPSHOT \
+		--env="PS1='[\u@\h \W]\$ '" \
+		-i \
+		--tty \
+		--restart=Never \
+		--command -- sh
