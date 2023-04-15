@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: data-prepper
-          image: eldius/opensearch-data-prepper:2.2.0-SNAPSHOT
+          image: eldius/opensearch-data-prepper:2.1.1
           ports:
             - containerPort: 21890
             - containerPort: 21891
@@ -32,7 +32,7 @@ spec:
           #  mountPath: /usr/share/data-prepper/
           #  readOnly: true
           - name: data-prepper-config-yaml
-            mountPath: /usr/share/data-prepper/config/
+            mountPath: /usr/share/data-prepper/config
             #readOnly: true
           - name: pipelines-yaml
             mountPath: /usr/share/data-prepper/pipelines
@@ -50,6 +50,8 @@ spec:
             items:
             - key: data-prepper-config.yaml
               path: data-prepper-config.yaml
+            - key: log4j2-rolling.properties
+              path: log4j2-rolling.properties
         - name: pipelines-yaml
           configMap:
             name: data-prepper-config-files

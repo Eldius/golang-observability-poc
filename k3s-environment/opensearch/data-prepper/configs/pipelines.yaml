@@ -25,8 +25,9 @@ raw-pipeline:
     - otel_trace_raw:
   sink:
     - opensearch:
-        hosts: [ "https://node-0.example.com:9200" ]
+        hosts: [ "https://opensearch:9200" ]
         # cert: "/usr/share/data-prepper/root-ca.pem"
+        insecure: true
         username: admin
         password: admin
         index_type: trace-analytics-raw
@@ -44,8 +45,9 @@ service-map-pipeline:
   sink:
     - stdout:
     - opensearch:
-        hosts: [ "https://node-0.example.com:9200" ]
+        hosts: [ "https://opensearch:9200" ]
         # cert: "/usr/share/data-prepper/root-ca.pem"
+        insecure: true
         username: admin
         password: admin
         index_type: trace-analytics-service-map
@@ -60,8 +62,9 @@ metrics-pipeline:
   sink:
     - stdout:
     - opensearch:
-        hosts: [ "https://node-0.example.com:9200" ]
+        hosts: [ "https://opensearch:9200" ]
         # cert: "/usr/share/data-prepper/root-ca.pem"
+        insecure: true
         username: admin
         password: admin
         index: "metrics-otel-v1"
@@ -81,7 +84,7 @@ log-pipeline:
         unauthenticated:
   sink:
     - opensearch:
-        hosts: [ "https://node-0.example.com:9200" ]
+        hosts: [ "https://opensearch:9200" ]
         insecure: true
         username: admin
         password: admin

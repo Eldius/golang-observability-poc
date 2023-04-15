@@ -89,12 +89,15 @@ conexões de banco em uso e disponíveis, etc.
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo apt-get install -y openjdk-17-jdk
 
-git clone https://github.com/opensearch-project/data-prepper.git && \
+git clone -b '2.1.1' https://github.com/opensearch-project/data-prepper.git && \
     cd data-prepper && \
     sed -i 's|eclipse-temurin:17-jdk-alpine|arm64v8/eclipse-temurin|g' release/docker/Dockerfile && \
     sed -i 's|apk update|apt update|g' release/docker/Dockerfile && \
     sed -i 's|apk add --no-cache bash bc|apt install bc bash -y|g' release/docker/Dockerfile && \
+    cp  data-prepper/shared-config/log4j.properties 
     ./gradlew :release:docker:docker || echo "ERROR"
-docker tag opensearch-data-prepper:2.2.0-SNAPSHOT eldius/opensearch-data-prepper:2.2.0-SNAPSHOT
-docker push eldius/opensearch-data-prepper:2.2.0-SNAPSHOT
+export IMAGE_NAME="$( docker images | grep opensearch | awk '{ print $1 }' )"
+export IMAGE_VERSION="$( docker images | grep opensearch | awk '{ print $2 }' )"
+docker tag "$IMAGE_NAME:$IMAGE_VERSION" "eldius/$IMAGE_NAME:$IMAGE_VERSION"
+docker push "eldius/$IMAGE_NAME:$IMAGE_VERSION"
 ```
