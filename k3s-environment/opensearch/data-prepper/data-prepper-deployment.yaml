@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: data-prepper-deployment
+  name: postgres-deployment
   labels:
-    app: data-prepper
+    app: postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: data-prepper
+      app: postgres
   template:
     metadata:
       labels:
-        app: data-prepper
+        app: postgres
     spec:
       containers:
-        - name: data-prepper
-          image: eldius/opensearch-data-prepper:2.1.1
+        - name: postgres
+          image: eldius/opensearch-postgres:2.1.1
           ports:
             - containerPort: 21890
             - containerPort: 21891
@@ -29,32 +29,32 @@ spec:
               memory: 256M
           volumeMounts:
           # - name: root-ca-pem
-          #  mountPath: /usr/share/data-prepper/
+          #  mountPath: /usr/share/postgres/
           #  readOnly: true
-          - name: data-prepper-config-yaml
-            mountPath: /usr/share/data-prepper/config
+          - name: postgres-config-yaml
+            mountPath: /usr/share/postgres/config
             #readOnly: true
           - name: pipelines-yaml
-            mountPath: /usr/share/data-prepper/pipelines
+            mountPath: /usr/share/postgres/pipelines
             #readOnly: true
       volumes:
         - name: root-ca-pem
           configMap:
-            name: data-prepper-config-files
+            name: postgres-config-files
             items:
             - key: root-ca.pem
               path: root-ca.pem
-        - name: data-prepper-config-yaml
+        - name: postgres-config-yaml
           configMap:
-            name: data-prepper-config-files
+            name: postgres-config-files
             items:
-            - key: data-prepper-config.yaml
-              path: data-prepper-config.yaml
+            - key: postgres-config.yaml
+              path: postgres-config.yaml
             - key: log4j2-rolling.properties
               path: log4j2-rolling.properties
         - name: pipelines-yaml
           configMap:
-            name: data-prepper-config-files
+            name: postgres-config-files
             items:
             - key: pipelines.yaml
               path: pipelines.yaml

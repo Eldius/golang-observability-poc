@@ -1,4 +1,6 @@
 
+CLUSTER_IP := 192.168.0.36
+
 ks-opensearch:
 	cd opensearch/opensearch; kubectl apply -f .
 
@@ -20,6 +22,12 @@ ks-data-prepper-down: ks-data-prepper-configmap-down
 ks-fluent-bit: ks-fluent-bit-configmap
 	cd opensearch/fluent-bit; kubectl apply -f .
 
+ks-postgres:
+	cd postgres; kubectl apply -f .
+
+ks-postgres-down:
+	cd postgres; kubectl delete -f .
+
 ks-fluent-bit-down: ks-fluent-bit-configmap-down
 	cd opensearch/fluent-bit; kubectl delete -f .
 
@@ -37,3 +45,15 @@ ks-fluent-bit-configmap:
 
 ks-fluent-bit-configmap-down:
 	kubectl delete configmap fluent-bit-config-files
+
+ks-jaeger-collector:
+	cd jaeger/collector; kubectl apply -f .
+
+ks-jaeger-collector-down:
+	cd jaeger/collector; kubectl delete -f .
+
+ks-jaeger-agent:
+	cd jaeger/agent; kubectl apply -f .
+
+ks-jaeger-agent-down:
+	cd jaeger/agent; kubectl delete -f .

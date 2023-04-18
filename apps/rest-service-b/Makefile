@@ -49,6 +49,22 @@ docker-up-opensearch: build-docker docker-down
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-b:dev
 
+docker-up-opensearch-k8s: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_b \
+		-d \
+		-m 16m \
+		--network services_network \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=192.168.0.36:24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=192.168.0.36:21890" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.168.0.36:21891" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+			eldius/service-b:dev
+
+
 docker-down:
 	-docker kill service_b
 	-docker rm service_b
@@ -65,6 +81,22 @@ docker-up-jaeger: docker-down build-docker
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_API_KEY)" \
+			eldius/service-b:dev
+
+
+docker-up-jaeger-k8s: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_b \
+		-d \
+		-m 16m \
+		--network services_network \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=192.168.0.36:24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=192.168.0.36:4317" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.168.0.36:21891" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
 			eldius/service-b:dev
 
 lint:

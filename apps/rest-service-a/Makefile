@@ -76,5 +76,43 @@ docker-up-opensearch: docker-down build-docker
 		-e "API_LOG_LEVEL=trace" \
 			eldius/service-a:dev
 
+docker-up-opensearch-k8s: docker-down build-docker
+
+	docker run \
+		--rm \
+		--name service_a \
+		--network services_network \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=192.168.0.36:24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=192.168.0.36:21890" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.168.0.36:21891" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+		-e "API_DB_HOST=192.168.0.36" \
+		-e "API_DB_PASS=P@ss" \
+			eldius/service-a:dev
+
 lint:
 	golangci-lint  run --config=../.golangci.yaml ./...
+
+
+docker-up-jaeger-k8s: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_a \
+		--network services_network \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=192.168.0.36:24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=192.168.0.36:4317" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.168.0.36:21891" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+		-e "API_DB_HOST=192.168.0.36" \
+		-e "API_DB_PASS=P@ss" \
+			eldius/service-a:dev

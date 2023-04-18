@@ -17,29 +17,18 @@ curl -i \
     "https://${CLUSTER_HOST}:9200/application-logs-00001" \
     -H 'Content-Type: application/json' \
     -d '{
-    "settings": {
-        "index": {
-            "number_of_shards": 2,
-            "number_of_replicas": 1
-        }
-    },
-    "mappings": {
-        "properties": {
-            "@timestamp": {
-                "type": "date"
-            },
-            "@version": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
+            "settings": {
+                "index": {
+                    "number_of_shards": 2,
+                    "number_of_replicas": 1
                 }
             },
-            "agent": {
+            "mappings": {
                 "properties": {
-                    "ephemeral_id": {
+                    "@timestamp": {
+                        "type": "date"
+                    },
+                    "@version": {
                         "type": "text",
                         "fields": {
                             "keyword": {
@@ -48,56 +37,128 @@ curl -i \
                             }
                         }
                     },
-                    "id": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                    "agent": {
+                        "properties": {
+                            "ephemeral_id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "name": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "version": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
                             }
                         }
                     },
-                    "name": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                    "container": {
+                        "properties": {
+                            "id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "image": {
+                                "properties": {
+                                    "name": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "name": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
                             }
                         }
                     },
-                    "type": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                    "docker": {
+                        "properties": {
+                            "container": {
+                                "properties": {
+                                    "labels": {
+                                        "type": "object"
+                                    }
+                                }
                             }
                         }
                     },
-                    "version": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    }
-                }
-            },
-            "container": {
-                "properties": {
-                    "id": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                    "ecs": {
+                        "properties": {
+                            "version": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
                             }
                         }
                     },
-                    "image": {
+                    "event": {
+                        "properties": {
+                            "original": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "host": {
                         "properties": {
                             "name": {
                                 "type": "text",
@@ -110,85 +171,9 @@ curl -i \
                             }
                         }
                     },
-                    "name": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    }
-                }
-            },
-            "docker": {
-                "properties": {
-                    "container": {
+                    "input": {
                         "properties": {
-                            "labels": {
-                                "type": "object"
-                            }
-                        }
-                    }
-                }
-            },
-            "ecs": {
-                "properties": {
-                    "version": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    }
-                }
-            },
-            "event": {
-                "properties": {
-                    "original": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    }
-                }
-            },
-            "host": {
-                "properties": {
-                    "name": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    }
-                }
-            },
-            "input": {
-                "properties": {
-                    "type": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    }
-                }
-            },
-            "log": {
-                "properties": {
-                    "file": {
-                        "properties": {
-                            "path": {
+                            "type": {
                                 "type": "text",
                                 "fields": {
                                     "keyword": {
@@ -199,47 +184,296 @@ curl -i \
                             }
                         }
                     },
-                    "offset": {
-                        "type": "long"
+                    "log": {
+                        "properties": {
+                            "file": {
+                                "properties": {
+                                    "path": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "offset": {
+                                "type": "long"
+                            }
+                        }
+                    },
+                    "message": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "stream": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "parsed": {
+                        "type": "object"
+                    },
+                    "tags": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
                     }
                 }
             },
-            "message": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
-            },
-            "stream": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
-            },
-            "parsed": {
-                "type": "object"
-            },
-            "tags": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+            "aliases": {
+                "application-logs": {}
             }
-        }
-    },
-    "aliases": {
-        "application-logs": {}
-    }
-}' || echo "Failed to create logs index"
+        }' || echo "Failed to create logs index"
+
+
+
+curl -i \
+    --fail \
+    --insecure \
+    -X PUT \
+    -u 'admin:admin' \
+    "https://${CLUSTER_HOST}:9200/custom-application-logs" \
+    -H 'Content-Type: application/json' \
+    -d '{
+            "settings": {
+                "index": {
+                    "number_of_shards": 2,
+                    "number_of_replicas": 1
+                }
+            },
+            "mappings": {
+                "properties": {
+                    "@timestamp": {
+                        "type": "date"
+                    },
+                    "@version": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "agent": {
+                        "properties": {
+                            "ephemeral_id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "name": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "version": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "container": {
+                        "properties": {
+                            "id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "image": {
+                                "properties": {
+                                    "name": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "name": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "docker": {
+                        "properties": {
+                            "container": {
+                                "properties": {
+                                    "labels": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "ecs": {
+                        "properties": {
+                            "version": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "event": {
+                        "properties": {
+                            "original": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "host": {
+                        "properties": {
+                            "name": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "input": {
+                        "properties": {
+                            "type": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "log": {
+                        "properties": {
+                            "file": {
+                                "properties": {
+                                    "path": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "offset": {
+                                "type": "long"
+                            }
+                        }
+                    },
+                    "message": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "parsed": {
+                        "type": "object"
+                    },
+                    "stream": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "tags": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            },
+            "aliases": {
+                "custom-application-logs": {}
+            }
+        }' || echo "Failed to create logs index"
 
 echo ""
 echo ""
@@ -269,6 +503,25 @@ echo ""
 echo ""
 
 curl -i \
+    --fail \
+    --insecure \
+    -X POST \
+    -u 'admin:admin' \
+    "http://${CLUSTER_HOST}:5601/api/saved_objects/index-pattern/custom-application-logs" \
+    -H 'osd-xsrf: true' \
+    -H 'Content-Type: application/json' \
+    -H 'securitytenant: global' \
+    -d '{
+        "attributes": {
+            "title": "custom-application-logs",
+            "timeFieldName": "timestamp"
+        }
+    }'
+
+echo ""
+echo ""
+
+curl -i \
         --fail \
         --insecure \
         -X POST \
@@ -280,6 +533,6 @@ curl -i \
         -d '{
             "attributes": {
                 "title": "metrics-otel-v1-*",
-                "timeFieldName": "@timestamp"
+                "timeFieldName": "time"
             }
         }'
