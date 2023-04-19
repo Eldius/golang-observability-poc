@@ -101,3 +101,29 @@ export IMAGE_VERSION="$( docker images | grep opensearch | awk '{ print $2 }' )"
 docker tag "$IMAGE_NAME:$IMAGE_VERSION" "eldius/$IMAGE_NAME:$IMAGE_VERSION"
 docker push "eldius/$IMAGE_NAME:$IMAGE_VERSION"
 ```
+
+
+## notas ##
+
+- Cmder:
+- ConEmu console emulator:
+  cons:
+    - The tool doesn’t include shell features such as tab completion and remote connections.
+    - Poor scrolling support – Scrolling navigates to blank space instead of text content.
+- Mintty console emulator for Cygwin:
+  cons:
+    - No support for WSL.
+    - No multiple tab support.
+- Console2 – best terminal emulators and command prompt for Windows:
+  cons:
+    - Inactive development team. The software was last updated in 2013.
+    - Many users face a glitch were stopping a running script closes the tab instead of showing the screen where users can input new command.
+- Hyper – a cross-platform terminal emulator:
+  cons:
+    - The software is unstable.
+    - Electron uses a lot of resources.
+    - Development activity is very slow.
+- Terminus – an open source windows terminal emulator:
+  cons:
+    - The software occupies over 80MB of drive space and uses a lot of resources.
+    - Programmers complain that some functions fail while running the software.

@@ -9,6 +9,12 @@ echo ""
 #CLUSTER_HOST="192.168.1.194"
 CLUSTER_HOST="192.168.0.36"
 
+echo ""
+echo "############################"
+echo "## application-logs-00001 ##"
+echo "############################"
+echo ""
+
 curl -i \
     --fail \
     --insecure \
@@ -241,6 +247,11 @@ curl -i \
             }
         }' || echo "Failed to create logs index"
 
+echo ""
+echo "#############################"
+echo "## custom-application-logs ##"
+echo "#############################"
+echo ""
 
 
 curl -i \
@@ -482,6 +493,12 @@ echo "## creating index pattern ##"
 echo "############################"
 echo ""
 
+echo ""
+echo ""
+echo "#############################################"
+echo "## creating index pattern application-logs ##"
+echo "#############################################"
+echo ""
 
 curl -i \
     --fail \
@@ -502,6 +519,14 @@ curl -i \
 echo ""
 echo ""
 
+
+echo ""
+echo ""
+echo "####################################################"
+echo "## creating index pattern custom-application-logs ##"
+echo "####################################################"
+echo ""
+
 curl -i \
     --fail \
     --insecure \
@@ -519,6 +544,12 @@ curl -i \
     }'
 
 echo ""
+echo ""
+
+echo ""
+echo "##############################################"
+echo "## creating index pattern metrics-otel-v1-* ##"
+echo "##############################################"
 echo ""
 
 curl -i \

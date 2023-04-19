@@ -153,6 +153,7 @@ jaeger-test:
 		--name jaeger-quyery \
 		-m 16m \
 		-p 16687:16687 \
+		-p 16686:16686 \
 		-e SPAN_STORAGE_TYPE=elasticsearch \
 		-e ES_SERVER_URLS=https://$(OPENSEARCH_IP):9200 \
 		--log-driver=fluentd \
