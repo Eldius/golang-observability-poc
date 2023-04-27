@@ -1,5 +1,5 @@
 
-OPENSEARCH_IP := 192.168.0.36
+OPENSEARCH_IP := 192.168.100.195
 
 APPS := $(wildcard apps/*/.)
 

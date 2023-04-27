@@ -1,4 +1,6 @@
 
+CLUSTER_IP := 192.168.100.195
+
 start:
 	$(eval OTEL_ENDPOINT := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jaeger))
 	$(eval DB_HOST := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres))
@@ -86,12 +88,12 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-m 16m \
 		-p 8080:8080 \
 		--log-driver=fluentd \
-		--log-opt fluentd-address=192.168.0.36:24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=192.168.0.36:21890" \
-		-e "API_OTEL_METRICS_ENDPOINT=192.168.0.36:21891" \
+		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):21890" \
+		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):21891" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
-		-e "API_DB_HOST=192.168.0.36" \
+		-e "API_DB_HOST=$(CLUSTER_IP)" \
 		-e "API_DB_PASS=P@ss" \
 			eldius/service-a:dev
 

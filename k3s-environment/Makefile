@@ -35,16 +35,28 @@ ks-opensearch-down:
 	cd opensearch/opensearch; kubectl delete -f .
 
 ks-data-prepper-configmap:
-	kubectl create configmap data-prepper-config-files --from-file=opensearch/data-prepper/configs
+	-kubectl create configmap data-prepper-config-files --from-file=opensearch/data-prepper/configs
 
 ks-data-prepper-configmap-down:
 	kubectl delete configmap data-prepper-config-files
 
 ks-fluent-bit-configmap:
-	kubectl create configmap fluent-bit-config-files --from-file=opensearch/fluent-bit/configs
+	-kubectl create configmap fluent-bit-config-files --from-file=opensearch/fluent-bit/configs
 
 ks-fluent-bit-configmap-down:
 	kubectl delete configmap fluent-bit-config-files
+
+ks-opensearch-configmap:
+	-kubectl create configmap opensearch-config-files --from-file=opensearch/opensearch/configs
+
+ks-opensearch-configmap-down:
+	kubectl delete configmap opensearch-config-files
+
+ks-dashboards-configmap:
+	-kubectl create configmap dashboards-config-files --from-file=opensearch/dashboards/configs
+
+ks-dashboards-configmap-down:
+	kubectl delete configmap dashboards-config-files
 
 ks-jaeger-collector:
 	cd jaeger/collector; kubectl apply -f .

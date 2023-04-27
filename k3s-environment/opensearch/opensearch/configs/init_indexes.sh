@@ -1,14 +1,14 @@
 #!/bin/sh
 
+CLUSTER_HOST="localhost:9200"
+
 echo ""
 echo "####################"
 echo "## creating index ##"
 echo "####################"
 echo ""
 
-#CLUSTER_HOST="192.168.1.194"
-#CLUSTER_HOST="192.168.100.195"
-CLUSTER_HOST="192.168.0.36"
+curl -i --insecure -XGET https://${CLUSTER_HOST}/_cluster/health -u 'admin:admin' | grep -E '("status":"yellow"|"status":"green")'
 
 echo ""
 echo "############################"
@@ -21,7 +21,7 @@ curl -i \
     --insecure \
     -X PUT \
     -u 'admin:admin' \
-    "https://${CLUSTER_HOST}:9200/application-logs-00001" \
+    "https://${CLUSTER_HOST}/application-logs-00001" \
     -H 'Content-Type: application/json' \
     -d '{
             "settings": {
@@ -260,7 +260,7 @@ curl -i \
     --insecure \
     -X PUT \
     -u 'admin:admin' \
-    "https://${CLUSTER_HOST}:9200/custom-application-logs" \
+    "https://${CLUSTER_HOST}/custom-application-logs-00001" \
     -H 'Content-Type: application/json' \
     -d '{
             "settings": {
@@ -486,85 +486,3 @@ curl -i \
                 "custom-application-logs": {}
             }
         }' || echo "Failed to create logs index"
-
-echo ""
-echo ""
-echo "############################"
-echo "## creating index pattern ##"
-echo "############################"
-echo ""
-
-echo ""
-echo ""
-echo "#############################################"
-echo "## creating index pattern application-logs ##"
-echo "#############################################"
-echo ""
-
-curl -i \
-    --fail \
-    --insecure \
-    -X POST \
-    -u 'admin:admin' \
-    "http://${CLUSTER_HOST}:5601/api/saved_objects/index-pattern/application-logs" \
-    -H 'osd-xsrf: true' \
-    -H 'Content-Type: application/json' \
-    -H 'securitytenant: global' \
-    -d '{
-        "attributes": {
-            "title": "application-logs",
-            "timeFieldName": "@timestamp"
-        }
-    }'
-
-echo ""
-echo ""
-
-
-echo ""
-echo ""
-echo "####################################################"
-echo "## creating index pattern custom-application-logs ##"
-echo "####################################################"
-echo ""
-
-curl -i \
-    --fail \
-    --insecure \
-    -X POST \
-    -u 'admin:admin' \
-    "http://${CLUSTER_HOST}:5601/api/saved_objects/index-pattern/custom-application-logs" \
-    -H 'osd-xsrf: true' \
-    -H 'Content-Type: application/json' \
-    -H 'securitytenant: global' \
-    -d '{
-        "attributes": {
-            "title": "custom-application-logs",
-            "timeFieldName": "timestamp"
-        }
-    }'
-
-echo ""
-echo ""
-
-echo ""
-echo "##############################################"
-echo "## creating index pattern metrics-otel-v1-* ##"
-echo "##############################################"
-echo ""
-
-curl -i \
-        --fail \
-        --insecure \
-        -X POST \
-        -u 'admin:admin' \
-        "http://${CLUSTER_HOST}:5601/api/saved_objects/index-pattern/metrics-otel-v1-*" \
-        -H 'osd-xsrf: true' \
-        -H 'Content-Type: application/json' \
-        -H 'securitytenant: global' \
-        -d '{
-            "attributes": {
-                "title": "metrics-otel-v1-*",
-                "timeFieldName": "time"
-            }
-        }'
