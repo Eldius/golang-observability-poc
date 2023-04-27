@@ -17,7 +17,7 @@ var rootCmd = &cobra.Command{
 	Long:  `Another simple rest api to test some concepts.`,
 	PersistentPreRun: func(_ *cobra.Command, _ []string) {
 		config.Setup(cfgFile)
-		logger.SetupLogs(config.GetLogLevel(), config.GetServiceName())
+		logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName())
 		telemetry.InitTelemetry(
 			telemetry.WithEnvironment(config.GetEnvironment()),
 			telemetry.WithMetricsEndpoint(config.GetOtelMetricsEndpoint()),

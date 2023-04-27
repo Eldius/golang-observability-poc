@@ -18,17 +18,17 @@ func Migrations() error {
 
 		migInfo, err := migrations.FindMigrations()
 		if err != nil {
-			l.Error().Err(err).Msg("failed to find migrations")
+			l.WithError(err).Error("failed to find migrations")
 			return err
 		}
-		l.Info().Int("migrations_to_do", len(migInfo)).Msgf("running migrations begin")
+		l.WithField("migrations_to_do", len(migInfo)).Infof("running migrations begin")
 
 		n, err := migrate.Exec(db.DB, "postgres", migrations, migrate.Up)
 		if err != nil {
-			l.Error().Err(err).Msg("failed to run migrations")
+			l.WithError(err).Error("failed to run migrations")
 			return err
 		}
-		l.Info().Int("migrations_done", n).Msgf("running migrations end")
+		l.WithField("migrations_done", n).Info("running migrations end")
 	}
 
 	return nil

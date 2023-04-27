@@ -52,13 +52,13 @@ func AuthAPIKey(_ string, db *sqlx.DB) func(next http.Handler) http.Handler {
 					"select id, name, username, api_key from api_users where api_key = $1",
 					authHeader,
 				); err != nil {
-					l.Error().Err(err).Str("api_key", authHeader).Msgf("failed to query db")
+					l.WithError(err).WithField("api_key", authHeader).Error("failed to query db")
 					w.WriteHeader(http.StatusInternalServerError)
 					telemetry.NotifyError(r.Context(), err)
 					return
 				}
 				if len(results) != 1 {
-					l.Warn().Str("api_key", authHeader).Msgf("wrong query results count: %d", len(results))
+					l.WithField("api_key", authHeader).Warn("wrong query results count: %d", len(results))
 					w.WriteHeader(http.StatusUnauthorized)
 					telemetry.NotifyError(r.Context(), errors.New("unauthorized request"))
 					return
@@ -67,7 +67,7 @@ func AuthAPIKey(_ string, db *sqlx.DB) func(next http.Handler) http.Handler {
 
 				telemetry.AddAttribute(ctx, "user", results[0].Username)
 
-				l.Debug().Str("api_key", authHeader).Msgf("right query results count: %d", len(results))
+				l.WithField("api_key", authHeader).Debug("right query results count: %d", len(results))
 			}
 
 			next.ServeHTTP(w, r.WithContext(ctx))

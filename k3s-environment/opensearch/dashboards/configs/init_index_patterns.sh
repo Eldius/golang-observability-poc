@@ -57,7 +57,7 @@ curl -i \
     -d '{
         "attributes": {
             "title": "custom-application-logs",
-            "timeFieldName": "timestamp"
+            "timeFieldName": "time"
         }
     }'
 

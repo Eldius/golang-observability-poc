@@ -1,14 +1,8 @@
 #!/bin/sh
 
-echo ""
-echo "####################"
-echo "## creating index ##"
-echo "####################"
-echo ""
-
 #CLUSTER_HOST="192.168.1.194"
-#CLUSTER_HOST="192.168.100.195"
-CLUSTER_HOST="192.168.0.36"
+CLUSTER_HOST="192.168.100.195"
+#CLUSTER_HOST="192.168.0.36"
 
 echo ""
 echo "############################"

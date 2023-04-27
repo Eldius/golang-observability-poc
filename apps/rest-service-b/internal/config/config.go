@@ -14,6 +14,10 @@ func GetLogLevel() string {
 	return viper.GetString("log.level")
 }
 
+func GetLogFormat() string {
+	return viper.GetString("log.format")
+}
+
 func GetDBHost() string {
 	return viper.GetString("db.host")
 }

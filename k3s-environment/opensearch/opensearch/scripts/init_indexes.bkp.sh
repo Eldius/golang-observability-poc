@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-CLUSTER_HOST="localhost:9200"
+CLUSTER_HOST="192.168.100.195:9200"
 
 echo ""
 echo "####################"

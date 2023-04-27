@@ -23,7 +23,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 	endpoint, err := url.Parse(config.GetWeatherServiceEndpoint())
 	if err != nil {
 		telemetry.NotifyError(ctx, err)
-		l.Error().Err(err).Msg("error parsing endpoint")
+		l.WithError(err).Error("error parsing endpoint")
 		return nil, err
 	}
 	q := endpoint.Query()
@@ -31,11 +31,11 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	endpoint.RawQuery = q.Encode()
 
-	l.Info().Str("api_key", config.GetWeatherServiceAPIKey()).Msg("integrating")
+	l.WithField("api_key", config.GetWeatherServiceAPIKey()).Info("integrating")
 	resp, err := httpclient.GetRequest(ctx, endpoint.String(), httpclient.WithHeader("x-api-key", config.GetWeatherServiceAPIKey()))
 	if err != nil {
 		telemetry.NotifyError(ctx, err)
-		l.Error().Err(err).Msg("error requesting weather api")
+		l.WithError(err).Error("error requesting weather api")
 		return nil, err
 	}
 	defer func() {

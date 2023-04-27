@@ -3,9 +3,8 @@ module github.com/eldius/golang-observability-poc/apps/rest-service-a
 go 1.20
 
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230407015022-9e57cca2de81
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230427202702-5ab9af4ec5b8
 	github.com/go-chi/chi/v5 v5.0.8
-	github.com/go-chi/httplog v0.2.5
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.7
 	github.com/rs/zerolog v1.29.0
@@ -35,8 +34,8 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/riandyrn/otelchi v0.5.1 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -50,7 +49,6 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v0.37.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.14.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.14.0 // indirect
-	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.14.0 // indirect
 	go.opentelemetry.io/otel/metric v0.37.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.14.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v0.37.0 // indirect

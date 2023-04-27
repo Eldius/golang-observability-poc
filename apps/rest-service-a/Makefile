@@ -56,6 +56,7 @@ docker-up-jaeger: docker-down build-docker
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
+		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev
 
 docker-up-opensearch: docker-down build-docker
@@ -76,10 +77,10 @@ docker-up-opensearch: docker-down build-docker
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
+		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev
 
 docker-up-opensearch-k8s: docker-down build-docker
-
 	docker run \
 		--rm \
 		--name service_a \
@@ -95,6 +96,7 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_DB_HOST=$(CLUSTER_IP)" \
 		-e "API_DB_PASS=P@ss" \
+		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev
 
 lint:

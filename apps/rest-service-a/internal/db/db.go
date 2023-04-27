@@ -2,10 +2,10 @@ package db
 
 import (
 	"fmt"
+	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // we need the Postgres driver
-	"github.com/rs/zerolog/log"
 	"github.com/uptrace/opentelemetry-go-extra/otelsql"
 	"github.com/uptrace/opentelemetry-go-extra/otelsqlx"
 	semconv "go.opentelemetry.io/otel/semconv/v1.18.0"
@@ -17,9 +17,9 @@ func DB() *sqlx.DB {
 	if db == nil {
 		_db, err := open()
 		if err != nil {
-			log.Fatal().
-				Err(err).
-				Msg("failed to create db pool")
+			logger.Logger().
+				WithError(err).
+				Fatal("failed to create db pool")
 		}
 		db = _db
 	}
