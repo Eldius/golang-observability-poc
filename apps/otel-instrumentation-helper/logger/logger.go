@@ -2,59 +2,80 @@ package logger
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
+	"os"
 	"strings"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-	"github.com/rs/zerolog/pkgerrors"
 	"go.opentelemetry.io/otel/trace"
 )
 
-var serviceName string
+var (
+	logger *logrus.Entry
+)
 
-func GetLogger(ctx context.Context) zerolog.Logger {
+func GetLogger(ctx context.Context) *logrus.Entry {
 	span := trace.SpanFromContext(ctx)
 
-	return zerolog.Ctx(ctx).
-		With().
-		Caller().
-		Str("trace_id", span.SpanContext().TraceID().String()).
-		Str("span_id", span.SpanContext().SpanID().String()).
-		Logger().Level(zerolog.GlobalLevel())
+	return logger.WithFields(logrus.Fields{
+		"trace_id": span.SpanContext().TraceID().String(),
+		"span_id":  span.SpanContext().SpanID().String(),
+	})
 }
 
-func Logger() zerolog.Logger {
-	return zerolog.Ctx(context.Background()).
-		With().
-		Caller().
-		Str("service", serviceName).
-		Logger().Level(zerolog.GlobalLevel())
+func Logger() *logrus.Entry {
+	return logger
 }
 
-func SetupLogs(level, service string) {
-	logLevel := strings.ToLower(level)
-	switch logLevel {
-	case zerolog.LevelPanicValue:
-		zerolog.SetGlobalLevel(zerolog.PanicLevel)
-	case zerolog.LevelFatalValue:
-		zerolog.SetGlobalLevel(zerolog.FatalLevel)
-	case zerolog.LevelErrorValue:
-		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
-	case zerolog.LevelWarnValue:
-		zerolog.SetGlobalLevel(zerolog.WarnLevel)
-	case zerolog.LevelInfoValue:
-		zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	case zerolog.LevelDebugValue:
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	case zerolog.LevelTraceValue:
-		zerolog.SetGlobalLevel(zerolog.TraceLevel)
-	default:
-		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+func SetupLogs(logLevel, logFormat, service string) {
+	var logFormatter logrus.Formatter
+	// Log as JSON instead of the default ASCII formatter.
+	if strings.ToLower(logFormat) == "json" {
+		logFormatter = &logrus.JSONFormatter{
+			DisableTimestamp:  false,
+			DisableHTMLEscape: false,
+			PrettyPrint:       false,
+		}
+	} else {
+		logFormatter = &logrus.TextFormatter{
+			ForceColors:               true,
+			DisableColors:             false,
+			ForceQuote:                false,
+			DisableQuote:              false,
+			EnvironmentOverrideColors: false,
+			DisableTimestamp:          false,
+			FullTimestamp:             true,
+		}
 	}
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	serviceName = service
 
-	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack //nolint:reassign // setting stack traces marshaller
+	logrus.SetFormatter(logFormatter)
+	logrus.SetReportCaller(true)
 
-	log.Info().Str("setup_log_level", zerolog.GlobalLevel().String()).Msg("SetupLogsEnd")
+	logLevel = strings.ToLower(logLevel)
+	switch strings.ToLower(logLevel) {
+	case "panic":
+		logrus.SetLevel(logrus.PanicLevel)
+	case "fatal":
+		logrus.SetLevel(logrus.FatalLevel)
+	case "error":
+		logrus.SetLevel(logrus.ErrorLevel)
+	case "warn":
+		logrus.SetLevel(logrus.WarnLevel)
+	case "info":
+		logrus.SetLevel(logrus.InfoLevel)
+	case "debug":
+		logrus.SetLevel(logrus.DebugLevel)
+	case "trace":
+		logrus.SetLevel(logrus.TraceLevel)
+	default:
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+
+	hostname, _ := os.Hostname()
+	var standardFields = logrus.Fields{
+		"hostname": hostname,
+		"service":  service,
+	}
+	logger = logrus.StandardLogger().WithFields(standardFields)
+
+	logrus.WithField("setup_log_level", logrus.GetLevel()).Info("SetupLogsEnd")
 }
