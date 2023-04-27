@@ -2,6 +2,10 @@ package httpclient
 
 import (
 	"context"
+	"fmt"
+	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"net/http"
 )
@@ -33,10 +37,24 @@ func MakeRequest(ctx context.Context, url, method string, opts ...Option) (*http
 		return nil, err
 	}
 
+	for k, v := range opt.headers {
+		req.Header.Set(k, fmt.Sprintf("%v", v))
+	}
+
+	l := logger.GetLogger(ctx).WithFields(logrus.Fields{
+		"url":     url,
+		"method":  req.Method,
+		"headers": opt.headers,
+	})
+
+	l.Debug("preparing to make a request")
+
 	res, err := defaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to make request")
 	}
+
+	l.Debug("request made")
 
 	return res, nil
 }

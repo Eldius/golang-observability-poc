@@ -68,5 +68,5 @@ func SetupLogs(logLevel, logFormat, service string) {
 	}
 	logger = logrus.StandardLogger().WithFields(standardFields)
 
-	logrus.WithField("setup_log_level", logrus.GetLevel()).Info("SetupLogsEnd")
+	logger.WithField("setup_log_level", logrus.GetLevel()).Info("SetupLogsEnd")
 }
