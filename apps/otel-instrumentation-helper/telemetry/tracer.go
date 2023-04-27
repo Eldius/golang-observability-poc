@@ -22,7 +22,7 @@ var Tracer trace.Tracer
 
 func initTracer(opt *options) {
 	l := logger.Logger()
-	l.Debug().Msg("init tracer begin")
+	l.Debug("init tracer begin")
 
 	// initialize trace provider
 	tp := initTracerProvider(opt)
@@ -33,9 +33,9 @@ func initTracer(opt *options) {
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
-	l.Debug().Msg("finished tracer configuration")
+	l.Debug("finished tracer configuration")
 
-	l.Debug().Msg("ending tracer provider")
+	l.Debug("ending tracer provider")
 
 	go waitTraces(tp)
 }
@@ -69,7 +69,7 @@ func initTracerProvider(opt *options) trace.TracerProvider {
 
 func otelTraceExporter(opt *options) sdktrace.SpanExporter {
 	l := logger.Logger()
-	l.Debug().Msgf("configuring trace export for '%s'", opt.tracesEndpoint)
+	l.Debugf("configuring trace export for '%s'", opt.tracesEndpoint)
 
 	var err error
 	conn, err := grpc.DialContext(
@@ -80,12 +80,12 @@ func otelTraceExporter(opt *options) sdktrace.SpanExporter {
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		l.Fatal().Err(err).Msg("failed to create gRPC connection to collector")
+		l.WithError(err).Fatal("failed to create gRPC connection to collector")
 	}
 
 	exporter, err := otlptracegrpc.New(opt.ctx, otlptracegrpc.WithGRPCConn(conn))
 	if err != nil {
-		l.Fatal().Err(err).Msg("failed to setup exporter")
+		l.WithError(err).Fatal("failed to setup exporter")
 	}
 
 	return exporter
@@ -96,7 +96,7 @@ func waitTraces(tp trace.TracerProvider) {
 		if p, ok := tp.(*sdktrace.TracerProvider); ok {
 			l := logger.Logger()
 			if err := p.Shutdown(context.Background()); err != nil {
-				l.Debug().Err(err).Msg("error shutting down tracer provider")
+				l.WithError(err).Debug("error shutting down tracer provider")
 			}
 		}
 	}()

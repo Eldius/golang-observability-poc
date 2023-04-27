@@ -46,14 +46,14 @@ func InitTelemetry(opts ...Option) {
 	for _, f := range opts {
 		opt = f(opt)
 	}
-	l.Debug().Msg("starting telemetry providers")
+	l.Debug("starting telemetry providers")
 
 	telemetryOpts = opt
 
 	initMetrics(opt)
 	initTracer(opt)
 
-	l.Debug().Msg("ending telemetry providers")
+	l.Debug("ending telemetry providers")
 }
 
 // WithServiceName configures service name.
@@ -107,7 +107,7 @@ func WithContext(c context.Context) Option {
 func SetupRestTracing(r *chi.Mux) {
 	if telemetryOpts == nil {
 		l := logger.Logger()
-		l.Warn().Msg("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
+		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
 		return
 	}
 	r.Use(otelchi.Middleware(telemetryOpts.serviceName, otelchi.WithChiRoutes(r)))

@@ -22,7 +22,7 @@ import (
 
 func initMetrics(opt *options) {
 	l := logger.Logger()
-	l.Debug().Msg("init tracer begin")
+	l.Debug("init tracer begin")
 
 	// initialize trace provider
 	mp := initMetricsProvider(opt)
@@ -31,15 +31,15 @@ func initMetrics(opt *options) {
 	global.SetMeterProvider(mp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
-	l.Debug().Msg("finished metrics provider configuration")
+	l.Debug("finished metrics provider configuration")
 
-	l.Debug().Msg("starting runtime instrumentation")
+	l.Debug("starting runtime instrumentation")
 	if err := runtime.Start(runtime.WithMinimumReadMemStatsInterval(time.Second)); err != nil {
-		l.Warn().Err(err).Msg("failed to start runtime monitoring")
+		l.WithError(err).Warn("failed to start runtime monitoring")
 		return
 	}
 
-	l.Debug().Msg("ending metrics provider")
+	l.Debug("ending metrics provider")
 
 	go waitMetrics(mp)
 }
@@ -71,7 +71,7 @@ func defaultResources(opt *options) *resource.Resource {
 
 func otelMetricsExporter(opt *options) metric.Exporter {
 	l := logger.Logger()
-	l.Debug().Msgf("configuring metric export for '%s'", opt.metricsEndpoint)
+	l.Debugf("configuring metric export for '%s'", opt.metricsEndpoint)
 
 	var opts []otlpmetricgrpc.Option
 
@@ -86,7 +86,7 @@ func otelMetricsExporter(opt *options) metric.Exporter {
 		opts...,
 	)
 	if err != nil {
-		l.Warn().Err(err).Msg("failed to configure otel metrics exporter")
+		l.WithError(err).Warn("failed to configure otel metrics exporter")
 		return nil
 	}
 
@@ -98,7 +98,7 @@ func waitMetrics(mp otelmetric.MeterProvider) {
 		if p, ok := mp.(*metric.MeterProvider); ok {
 			l := logger.Logger()
 			if err := p.Shutdown(context.Background()); err != nil {
-				l.Debug().Err(err).Msg("error shutting down metric provider")
+				l.WithError(err).Debug("error shutting down metric provider")
 			}
 		}
 	}()
