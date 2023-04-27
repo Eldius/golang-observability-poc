@@ -3,7 +3,6 @@ module github.com/eldius/golang-observability-poc/apps/otel-instrumentation-help
 go 1.20
 
 require (
-	github.com/chi-middleware/logrus-logger v0.2.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/riandyrn/otelchi v0.5.1
 	github.com/sirupsen/logrus v1.9.0
