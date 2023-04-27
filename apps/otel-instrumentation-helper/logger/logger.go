@@ -30,20 +30,11 @@ func SetupLogs(logLevel, logFormat, service string) {
 	var logFormatter logrus.Formatter
 	// Log as JSON instead of the default ASCII formatter.
 	if strings.ToLower(logFormat) == "json" {
-		logFormatter = &logrus.JSONFormatter{
-			DisableTimestamp:  false,
-			DisableHTMLEscape: false,
-			PrettyPrint:       false,
-		}
+		logFormatter = &logrus.JSONFormatter{}
 	} else {
 		logFormatter = &logrus.TextFormatter{
-			ForceColors:               true,
-			DisableColors:             false,
-			ForceQuote:                false,
-			DisableQuote:              false,
-			EnvironmentOverrideColors: false,
-			DisableTimestamp:          false,
-			FullTimestamp:             true,
+			ForceColors:   true,
+			FullTimestamp: true,
 		}
 	}
 
