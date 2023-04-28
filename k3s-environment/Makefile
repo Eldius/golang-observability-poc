@@ -83,3 +83,4 @@ ks-opensearch-init-indexes:
 ks-dashboards-init-index-patterns:
 	./opensearch/dashboards/scripts/config_index_patterns.sh
 
+

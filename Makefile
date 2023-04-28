@@ -46,15 +46,16 @@ services-network-down:
 	-docker network rm services_network
 
 services-opensearch-k8s: $(APIS) services-network
+	@echo "WEATHER_APIKEY: $(WEATHER_APIKEY)"
 	@echo "Services starting - Opensearch..."
 	for dir in $(APIS); do \
-		$(MAKE) -C $$dir docker-up-opensearch-k8s; \
+		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-opensearch-k8s; \
 	done
 
 services-jaeger-k8s: $(APIS) services-network
 	@echo "Services starting - Jaeger..."
 	for dir in $(APIS); do \
-		$(MAKE) -C $$dir docker-up-jaeger-k8s; \
+		$(MAKE) -C $$dir docker-up-jaeger-k8s WEATHER_APIKEY=$(WEATHER_APIKEY); \
 	done
 
 services-jaeger:

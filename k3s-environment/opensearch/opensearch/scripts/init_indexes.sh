@@ -263,146 +263,247 @@ curl -i \
     "https://${CLUSTER_HOST}/custom-application-logs-00001" \
     -H 'Content-Type: application/json' \
     -d '{
-    "settings": {
-        "index": {
-            "number_of_shards": 2,
-            "number_of_replicas": 1
+    "settings":{
+        "index":{
+            "number_of_shards":2,
+            "number_of_replicas":1
         }
     },
-    "mappings": {
-        "properties": {
-            "addr": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+    "mappings":{
+        "properties":{
+            "addr":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "container_id": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "api_key":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "container_name": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "bytes":{
+                "type":"long"
+            },
+            "category":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "date": {
-                "type": "float"
-            },
-            "file": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "city":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "func": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "container_id":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "hostname": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "container_name":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "level": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "date":{
+                "type":"float"
+            },
+            "duration":{
+                "type":"long"
+            },
+            "duration_display":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "log": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "error":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "message": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "file":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "migrations_done": {
-                "type": "long"
-            },
-            "migrations_to_do": {
-                "type": "long"
-            },
-            "msg": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "func":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "service": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "hostname":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "setup_log_level": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "level":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "source": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+            "log":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
                     }
                 }
             },
-            "time": {
-                "type": "date"
+            "message":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "method":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "migrations_done":{
+                "type":"long"
+            },
+            "migrations_to_do":{
+                "type":"long"
+            },
+            "msg":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "proto":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "remote_ip":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "service":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "setup_log_level":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "source":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "span_id":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "status_code":{
+                "type":"long"
+            },
+            "time":{
+                "type":"date"
+            },
+            "trace_id":{
+                "type":"text",
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
             }
         }
     },
-    "aliases": {
-        "custom-application-logs": {}
+    "aliases":{
+        "custom-application-logs":{
+            
+        }
     }
 }' || echo "Failed to create logs index"

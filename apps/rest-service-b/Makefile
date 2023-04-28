@@ -66,6 +66,7 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_LOG_FORMAT=json" \
+		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
 			eldius/service-b:dev
 
 
@@ -84,7 +85,7 @@ docker-up-jaeger: docker-down build-docker
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
-		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_API_KEY)" \
+		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
 		-e "API_LOG_FORMAT=json" \
 			eldius/service-b:dev
 
@@ -103,6 +104,7 @@ docker-up-jaeger-k8s: docker-down build-docker
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_LOG_FORMAT=json" \
+		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
 			eldius/service-b:dev
 
 lint:

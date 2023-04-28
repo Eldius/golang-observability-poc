@@ -6,6 +6,7 @@ import (
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/httpclient"
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
+	"github.com/pkg/errors"
 	"net/url"
 )
 
@@ -13,6 +14,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	e, err := url.Parse(config.GetServiceBEndpoint() + "/weather")
 	if err != nil {
+		err = errors.Wrap(err, "failed to parse integration url")
 		telemetry.NotifyError(ctx, err)
 		return nil, err
 	}
@@ -23,6 +25,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	resp, err := httpclient.GetRequest(ctx, e.String())
 	if err != nil {
+		err = errors.Wrap(err, "failed to call service b")
 		telemetry.NotifyError(ctx, err)
 		return nil, err
 	}
@@ -33,6 +36,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 	var w Weather
 
 	if err := json.NewDecoder(resp.Body).Decode(&w); err != nil {
+		err = errors.Wrap(err, "failed to decode service b response")
 		return nil, err
 	}
 

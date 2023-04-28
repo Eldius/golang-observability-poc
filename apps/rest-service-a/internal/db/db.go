@@ -6,6 +6,7 @@ import (
 	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // we need the Postgres driver
+	"github.com/pkg/errors"
 	"github.com/uptrace/opentelemetry-go-extra/otelsql"
 	"github.com/uptrace/opentelemetry-go-extra/otelsqlx"
 	semconv "go.opentelemetry.io/otel/semconv/v1.18.0"
@@ -17,6 +18,7 @@ func DB() *sqlx.DB {
 	if db == nil {
 		_db, err := open()
 		if err != nil {
+			err = errors.Wrap(err, "failed to open db connection")
 			logger.Logger().
 				WithError(err).
 				Fatal("failed to create db pool")

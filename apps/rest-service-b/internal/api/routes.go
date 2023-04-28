@@ -7,6 +7,7 @@ import (
 	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/weather"
 	"github.com/go-chi/chi/v5"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
@@ -59,6 +60,10 @@ func weatherHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	we, err := weather.GetWeather(r.Context(), c)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		logger.GetLogger(r.Context()).WithFields(logrus.Fields{
+			"city": c,
+		}).WithError(err).
+			Error("error getting external weather")
 		_, _ = w.Write([]byte(err.Error())) //nolint:errcheck // ignoring error
 		return
 	}

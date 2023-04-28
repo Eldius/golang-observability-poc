@@ -3,8 +3,10 @@ module github.com/eldius/golang-observability-poc/apps/rest-service-b
 go 1.20
 
 require (
-	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230427202702-5ab9af4ec5b8
+	github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper v0.0.0-20230427235202-f0e6276de307
 	github.com/go-chi/chi/v5 v5.0.8
+	github.com/pkg/errors v0.9.1
+	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.15.0
 )
@@ -23,7 +25,6 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/riandyrn/otelchi v0.5.1 // indirect
-	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
