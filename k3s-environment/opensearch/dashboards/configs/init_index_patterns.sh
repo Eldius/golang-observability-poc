@@ -19,7 +19,6 @@ echo "#############################################"
 echo ""
 
 curl -i \
-    --fail \
     --insecure \
     -X POST \
     -u 'admin:admin' \
@@ -46,7 +45,6 @@ echo "####################################################"
 echo ""
 
 curl -i \
-    --fail \
     --insecure \
     -X POST \
     -u 'admin:admin' \
@@ -71,7 +69,6 @@ echo "##############################################"
 echo ""
 
 curl -i \
-        --fail \
         --insecure \
         -X POST \
         -u 'admin:admin' \
@@ -93,7 +90,6 @@ curl -i \
 # echo ""
 # 
 # curl -i \
-#         --fail \
 #         --insecure \
 #         -X POST \
 #         -u 'admin:admin' \
