@@ -93,6 +93,7 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):21890" \
 		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):21891" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_DB_HOST=$(CLUSTER_IP)" \
 		-e "API_DB_PASS=P@ss" \
