@@ -1,8 +1,8 @@
 package db
 
 import (
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/rest-service-a/internal/config"
 	_ "github.com/lib/pq" // we need the Postgres driver
 	"github.com/pkg/errors"
 	migrate "github.com/rubenv/sql-migrate"

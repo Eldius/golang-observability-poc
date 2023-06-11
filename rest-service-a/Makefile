@@ -34,7 +34,7 @@ build: tidy
 		./cmd/
 
 update-library:
-	go get -u github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper@$(shell git rev-parse --short HEAD)
+	go get -u github.com/eldius/golang-observability-poc/otel-instrumentation-helper@$(shell git rev-parse --short HEAD)
 
 
 docker-down:

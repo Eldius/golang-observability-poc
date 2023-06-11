@@ -42,8 +42,8 @@ lint: $(APPS)
 
 update-library:
 	$(eval CURR_DIR := $(PWD))
-	$(MAKE) -C apps/rest-service-a update-library
-	$(MAKE) -C apps/rest-service-b update-library
+	$(MAKE) -C ./rest-service-a update-library
+	$(MAKE) -C ./rest-service-b update-library
 
 weather:
 	http http://localhost:8080/weather city=="Rio de Janeiro"

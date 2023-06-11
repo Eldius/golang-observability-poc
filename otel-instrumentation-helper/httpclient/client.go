@@ -3,7 +3,7 @@ package httpclient
 import (
 	"context"
 	"fmt"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"

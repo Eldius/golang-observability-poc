@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 	"errors"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/jmoiron/sqlx"
 	"github.com/rs/zerolog/log"
 	"net/http"

@@ -3,9 +3,9 @@ package serviceb
 import (
 	"context"
 	"encoding/json"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/httpclient"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/httpclient"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
+	"github.com/eldius/golang-observability-poc/rest-service-a/internal/config"
 	"github.com/pkg/errors"
 	"net/url"
 )

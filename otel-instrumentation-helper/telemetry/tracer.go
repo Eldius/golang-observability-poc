@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"

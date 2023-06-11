@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"

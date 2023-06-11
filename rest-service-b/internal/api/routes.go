@@ -3,10 +3,9 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/weather"
-	"github.com/go-chi/chi/v5"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
+	"github.com/eldius/golang-observability-poc/rest-service-b/internal/weather"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"

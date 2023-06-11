@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/telemetry"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/api"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-b/internal/config"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
+	"github.com/eldius/golang-observability-poc/rest-service-b/internal/api"
+	"github.com/eldius/golang-observability-poc/rest-service-b/internal/config"
 
 	"github.com/spf13/cobra"
 	"os"

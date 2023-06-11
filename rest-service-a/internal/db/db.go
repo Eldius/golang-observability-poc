@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"github.com/eldius/golang-observability-poc/apps/otel-instrumentation-helper/logger"
-	"github.com/eldius/golang-observability-poc/apps/rest-service-a/internal/config"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/rest-service-a/internal/config"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // we need the Postgres driver
 	"github.com/pkg/errors"
