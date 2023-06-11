@@ -1,7 +1,7 @@
 
 OPENSEARCH_IP := 192.168.100.195
 
-APPS := $(wildcard */.)
+APPS := otel-instrumentation-helper rest-service-a rest-service-b
 
 APIS := $(wildcard rest-service*/.)
 
@@ -31,7 +31,7 @@ services-down: db-down
 
 tidy: $(APPS)
 	for dir in $(APPS); do \
-		$(MAKE) -C $$dir tidy; \
+		$(MAKE) -C $$dir tidy || exit 1; \
 	done
 
 lint: $(APPS)
@@ -41,9 +41,10 @@ lint: $(APPS)
 	done
 
 update-library:
-	$(eval CURR_DIR := $(PWD))
-	$(MAKE) -C ./rest-service-a update-library
-	$(MAKE) -C ./rest-service-b update-library
+	for dir in $(APIS); do \
+		$(MAKE) -C $$dir update-library || exit 1; \
+	done
+
 
 weather:
 	http http://localhost:8080/weather city=="Rio de Janeiro"
