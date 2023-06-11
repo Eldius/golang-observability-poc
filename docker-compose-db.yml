@@ -15,3 +15,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - services_network
+networks:
+  services_network:
+    external: true

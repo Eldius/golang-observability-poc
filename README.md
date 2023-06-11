@@ -43,6 +43,10 @@ conexões de banco em uso e disponíveis, etc.
 ![arquitetura utilizando OpenSearch](./docs/images/observability_poc_diagram_opensearch.drawio.png)
 
 
+## configuração do backend ##
+
+- [usando Docker](https://github.com/eldius/golang-observability-docker-env)
+- [usando K8s](https://github.com/eldius/golang-observability-k8s-env)
 
 
 ## links de referência ##
@@ -65,6 +69,7 @@ conexões de banco em uso e disponíveis, etc.
 - [Defining processors - Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html)
 - [Exported fields - Filebeat Processors](https://www.elastic.co/guide/en/beats/filebeat/current/exported-fields.html)
 - [Migrating from Logstash](https://opensearch.org/docs/latest/data-prepper/migrating-from-logstash-data-prepper/)
+
 
 ### providers Terraform para Elasticsearch/Opensearch ###
 

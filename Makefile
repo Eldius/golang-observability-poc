@@ -1,43 +1,14 @@
 
 OPENSEARCH_IP := 192.168.100.195
 
-APPS := $(wildcard apps/*/.)
+APPS := $(wildcard */.)
 
-APIS := $(wildcard apps/rest-service*/.)
+APIS := $(wildcard rest-service*/.)
 
-env-jaeger-down: services-down
-	cd docker-environment/jaeger ; docker compose \
-		-f docker-compose-jaeger.yml \
-		-f ../docker-compose-db.yml \
-		down
-
-env-jaeger: env-jaeger-down
-	cd docker-environment/jaeger ; docker compose \
-		-f docker-compose-jaeger.yml \
-		-f ../docker-compose-db.yml \
-		up \
-		-d \
-			--build
-
-env-opensearch-down: services-down
-	cd docker-environment/opensearch ; docker compose \
-		-f docker-compose-opensearch.yml \
-		-f ../docker-compose-db.yml \
-		down
-
-env-opensearch: env-opensearch-down
-	cd docker-environment/opensearch ; docker compose \
-		-f docker-compose-opensearch.yml \
-		-f ../docker-compose-db.yml \
-		up \
-		-d \
-			--build
-
-services-opensearch: $(APIS)
-	@echo "Services starting - Opensearch..."
-	for dir in $(APIS); do \
-		$(MAKE) -C $$dir docker-up-opensearch; \
-	done
+db:
+	-docker compose -f docker-compose-db.yml up -d
+db-down:
+	-docker compose -f docker-compose-db.yml down
 
 services-network:
 	-docker network create services_network
@@ -45,27 +16,14 @@ services-network:
 services-network-down:
 	-docker network rm services_network
 
-services-opensearch-k8s: $(APIS) services-network
+services-opensearch-k8s: $(APIS) services-network db
 	@echo "WEATHER_APIKEY: $(WEATHER_APIKEY)"
 	@echo "Services starting - Opensearch..."
 	for dir in $(APIS); do \
 		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-opensearch-k8s; \
 	done
 
-services-jaeger-k8s: $(APIS) services-network
-	@echo "Services starting - Jaeger..."
-	for dir in $(APIS); do \
-		$(MAKE) -C $$dir docker-up-jaeger-k8s WEATHER_APIKEY=$(WEATHER_APIKEY); \
-	done
-
-services-jaeger:
-	@echo "Services starting - Jaeger..."
-	@echo "Services starting - Opensearch..."
-	for dir in $(APIS); do \
-		$(MAKE) -C $$dir docker-up-jaeger; \
-	done
-
-services-down:
+services-down: db-down
 	@echo "Services stopping..."
 	for dir in $(APIS); do \
 		$(MAKE) -C $$dir docker-down; \
@@ -129,50 +87,3 @@ test:
 		--tty \
 		--restart=Never \
 		--command -- sh
-
-ks-terraform-opensearch-apply: ks-terraform-opensearch-init
-	cd k3s-environment/terraform ; ELASTICSEARCH_USERNAME=admin \
-		ELASTICSEARCH_PASSWORD=admin \
-		ELASTICSEARCH_URL=https://$(OPENSEARCH_IP):9200 \
-			TF_LOG=debug terraform apply
-
-ks-terraform-opensearch-init:
-	cd k3s-environment/terraform ; ELASTICSEARCH_USERNAME=admin \
-		ELASTICSEARCH_PASSWORD=admin \
-		ELASTICSEARCH_URL=https://$(OPENSEARCH_IP):9200 \
-			terraform init
-
-ks-terraform-opensearch-destroy: ks-terraform-opensearch-init
-	cd k3s-environment/terraform ; ELASTICSEARCH_USERNAME=admin \
-		ELASTICSEARCH_PASSWORD=admin \
-		ELASTICSEARCH_URL=https://$(OPENSEARCH_IP):9200 \
-			terraform destroy
-
-jaeger-test:
-	docker run \
-		--rm \
-		--name jaeger-quyery \
-		-m 16m \
-		-p 16687:16687 \
-		-p 16686:16686 \
-		-e SPAN_STORAGE_TYPE=elasticsearch \
-		-e ES_SERVER_URLS=https://$(OPENSEARCH_IP):9200 \
-		--log-driver=fluentd \
-		--log-opt fluentd-address=192.168.0.36:24224 \
-		-v "$(PWD)/docker-environment/opensearch/configs/root-ca.pem:/root-ca.pem:ro" \
-			jaegertracing/jaeger-query:latest \
-				--es.tls.skip-host-verify \
-				--es.tls.ca "/root-ca.pem" \
-				--admin.http.host-port ":16687" \
-				--es.tls.enabled \
-				--es.username admin \
-				--es.password admin
-
-	# docker run -d --rm \
-	# -p 16686:16686 \
-	# -p 16687:16687 \
-	# -e SPAN_STORAGE_TYPE=elasticsearch \
-	# -e ES_SERVER_URLS=https://$(OPENSEARCH_IP):9200 \
-	# jaegertracing/jaeger-query:1.18
-
-#jaeger-query
