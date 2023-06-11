@@ -38,7 +38,7 @@ func initTracer(opt *options) {
 
 func initTracerProvider(opt *options) trace.TracerProvider {
 	if opt.tracesEndpoint == "" {
-		return trace.NewNoopTracerProvider()
+		return nil
 	}
 	exporter := otelTraceExporter(opt)
 
@@ -60,6 +60,7 @@ func initTracerProvider(opt *options) trace.TracerProvider {
 
 	// set global tracer provider & text propagators
 	otel.SetTracerProvider(provider)
+	Tracer = provider.Tracer(opt.serviceName)
 
 	return provider
 }
