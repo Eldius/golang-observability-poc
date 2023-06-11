@@ -25,9 +25,7 @@ func initMetrics(opt *options) {
 
 	// initialize trace provider
 	mp := initMetricsProvider(opt)
-	// set global tracer provider & text propagators
 
-	otel.SetMeterProvider(mp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
 	l.Debug("finished metrics provider configuration")
@@ -45,7 +43,7 @@ func initMetrics(opt *options) {
 
 func initMetricsProvider(opt *options) otelmetric.MeterProvider {
 	if opt.metricsEndpoint == "" {
-		return otelmetric.NewNoopMeterProvider()
+		return nil
 	}
 	exporter := otelMetricsExporter(opt)
 
@@ -53,7 +51,8 @@ func initMetricsProvider(opt *options) otelmetric.MeterProvider {
 		metric.WithReader(metric.NewPeriodicReader(exporter)),
 		metric.WithResource(defaultResources(opt)))
 
-	global.SetMeterProvider(provider)
+	// set global tracer provider & text propagators
+	otel.SetMeterProvider(provider)
 
 	return provider
 }

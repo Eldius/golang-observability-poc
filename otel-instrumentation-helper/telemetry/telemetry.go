@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/go-chi/chi/v5"
 	"github.com/riandyrn/otelchi"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"

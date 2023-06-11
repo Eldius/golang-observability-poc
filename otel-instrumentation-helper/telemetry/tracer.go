@@ -26,11 +26,7 @@ func initTracer(opt *options) {
 
 	// initialize trace provider
 	tp := initTracerProvider(opt)
-	// set global tracer provider & text propagators
 
-	Tracer = tp.Tracer(opt.serviceName)
-
-	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
 	l.Debug("finished tracer configuration")
@@ -62,6 +58,7 @@ func initTracerProvider(opt *options) trace.TracerProvider {
 		sdktrace.WithSpanProcessor(bsp),
 	)
 
+	// set global tracer provider & text propagators
 	otel.SetTracerProvider(provider)
 
 	return provider
