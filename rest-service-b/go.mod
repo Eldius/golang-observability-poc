@@ -3,7 +3,8 @@ module github.com/eldius/golang-observability-poc/rest-service-b
 go 1.20
 
 require (
-	github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20230611231907-c7f2cfcfd948
+	github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20230611235510-8d688c573db1
+	github.com/go-chi/chi/v5 v5.0.8
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.7.0
@@ -14,7 +15,6 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/go-chi/chi/v5 v5.0.8 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

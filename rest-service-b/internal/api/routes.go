@@ -6,6 +6,7 @@ import (
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-b/internal/weather"
+	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"

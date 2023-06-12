@@ -7,6 +7,7 @@ import (
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/db"
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/integration/serviceb"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"time"
 )
