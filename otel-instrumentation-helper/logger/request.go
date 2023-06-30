@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/sirupsen/logrus"
@@ -43,11 +44,13 @@ func ReqLogger(category string, logger logrus.FieldLogger) func(h http.Handler) 
 					"method":           r.Method,
 					"trace_id":         span.SpanContext().TraceID().String(),
 					"span_id":          span.SpanContext().SpanID().String(),
+					"path":             r.RequestURI,
+					"url":              fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI),
 				}
 				if len(reqID) > 0 {
 					fields["request_id"] = reqID
 				}
-				logger.WithFields(fields).Infof("%s://%s%s", scheme, r.Host, r.RequestURI)
+				logger.WithFields(fields).Infof("RequestReceived")
 			}()
 
 			h.ServeHTTP(ww, r)
