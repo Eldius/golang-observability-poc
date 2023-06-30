@@ -5,18 +5,13 @@ APPS := otel-instrumentation-helper rest-service-a rest-service-b
 
 APIS := $(wildcard rest-service*/.)
 
-db:
-	-docker compose -f docker-compose-db.yml up -d
-db-down:
-	-docker compose -f docker-compose-db.yml down
-
 services-network:
 	-docker network create services_network
 
 services-network-down:
 	-docker network rm services_network
 
-services-opensearch-k8s: $(APIS) services-network db
+services-opensearch-k8s: $(APIS) services-network
 	@echo "WEATHER_APIKEY: $(WEATHER_APIKEY)"
 	@echo "Services starting - Opensearch..."
 	for dir in $(APIS); do \
