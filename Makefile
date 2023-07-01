@@ -18,7 +18,7 @@ services-opensearch-k8s: $(APIS) services-network
 		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-opensearch-k8s; \
 	done
 
-services-down: db-down
+services-down: services-network-down
 	@echo "Services stopping..."
 	for dir in $(APIS); do \
 		$(MAKE) -C $$dir docker-down; \
