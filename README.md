@@ -45,7 +45,7 @@ conexões de banco em uso e disponíveis, etc.
 
 ## configuração do backend ##
 
-- [usando Docker](https://github.com/eldius/golang-observability-docker-env)
+- [usando Docker (talvez esteja um pouco desatualizado)](https://github.com/eldius/golang-observability-docker-env)
 - [usando K8s](https://github.com/eldius/golang-observability-k8s-env)
 
 

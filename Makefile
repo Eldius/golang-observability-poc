@@ -41,6 +41,19 @@ update-library:
 	done
 
 
+vulncheck:
+	for dir in $(APPS); do \
+	    echo "#####################"; \
+	    echo "# starting for $$dir"; \
+	    echo "#####################"; \
+		govulncheck -C "$$dir" ./... || exit 1; \
+	    echo ""; \
+	    echo "ending for $$dir"; \
+	    echo ""; \
+	    echo "---------------------"; \
+	done
+
+
 weather:
 	http http://localhost:8080/weather city=="Rio de Janeiro"
 
