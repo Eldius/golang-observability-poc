@@ -1,5 +1,5 @@
 
-OPENSEARCH_IP := 192.168.100.195
+OPENSEARCH_IP := 192.168.100.196
 
 APPS := otel-instrumentation-helper rest-service-a rest-service-b
 

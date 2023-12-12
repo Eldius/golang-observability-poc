@@ -1,5 +1,5 @@
 # builder image
-FROM golang:1.20-alpine as builder
+FROM golang:1.21.5-alpine as builder
 
 ARG COMMIT_HASH
 
