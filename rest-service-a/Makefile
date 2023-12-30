@@ -100,6 +100,26 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev
 
+docker-up-skywalking-k8s: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_a \
+		--network services_network \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+		-e "API_DB_HOST=$(CLUSTER_IP)" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_LOG_FORMAT=json" \
+			eldius/service-a:dev
+
 lint:
 	golangci-lint  run --config=../.golangci.yaml ./...
 

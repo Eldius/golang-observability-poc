@@ -70,6 +70,26 @@ docker-up-opensearch-k8s: docker-down build-docker
 			eldius/service-b:dev
 
 
+docker-up-skywalking-k8s: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_b \
+		--network services_network \
+		-d \
+		-m 16m \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
+		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+		-e "API_DB_HOST=$(CLUSTER_IP)" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_LOG_FORMAT=json" \
+		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
+			eldius/service-b:dev
+
 docker-down:
 	-docker kill service_b
 	-docker rm service_b

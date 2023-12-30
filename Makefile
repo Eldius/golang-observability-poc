@@ -18,6 +18,13 @@ services-opensearch-k8s: $(APIS) services-network
 		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-opensearch-k8s; \
 	done
 
+services-skywalking-k8s: $(APIS) services-network
+	@echo "WEATHER_APIKEY: $(WEATHER_APIKEY)"
+	@echo "Services starting - Opensearch..."
+	for dir in $(APIS); do \
+		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-skywalking-k8s; \
+	done
+
 services-down: services-network-down
 	@echo "Services stopping..."
 	for dir in $(APIS); do \
