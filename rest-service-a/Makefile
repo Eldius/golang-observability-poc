@@ -16,7 +16,7 @@ start:
 build-docker:
 	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
 	@echo "COMMIT_HASH: $(COMMIT_HASH)"
-	docker build \
+	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
 		-t eldius/service-a:dev \
 			.
@@ -98,6 +98,7 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_DB_HOST=$(CLUSTER_IP)" \
 		-e "API_DB_PASS=P@ss" \
 		-e "API_LOG_FORMAT=json" \
+		--nework=host \
 			eldius/service-a:dev
 
 docker-up-skywalking-k8s: docker-down build-docker
@@ -110,7 +111,7 @@ docker-up-skywalking-k8s: docker-down build-docker
 		-p 8080:8080 \
 		--log-driver=fluentd \
 		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):4317" \
 		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):11800" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
@@ -118,6 +119,7 @@ docker-up-skywalking-k8s: docker-down build-docker
 		-e "API_DB_HOST=$(CLUSTER_IP)" \
 		-e "API_DB_PASS=P@ss" \
 		-e "API_LOG_FORMAT=json" \
+		--nework=host \
 			eldius/service-a:dev
 
 lint:

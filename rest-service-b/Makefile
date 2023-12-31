@@ -16,7 +16,7 @@ start:
 build-docker:
 	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
 	@echo "COMMIT_HASH: $(COMMIT_HASH)"
-	docker build \
+	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
 		-t eldius/service-b:dev \
 			.
@@ -67,6 +67,7 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_LOG_LEVEL=trace" \
 		-e "API_LOG_FORMAT=json" \
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
+		--nework=host \
 			eldius/service-b:dev
 
 
@@ -79,7 +80,7 @@ docker-up-skywalking-k8s: docker-down build-docker
 		-m 16m \
 		--log-driver=fluentd \
 		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):4317" \
 		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):11800" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
@@ -88,6 +89,7 @@ docker-up-skywalking-k8s: docker-down build-docker
 		-e "API_DB_PASS=P@ss" \
 		-e "API_LOG_FORMAT=json" \
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
+		--nework=host \
 			eldius/service-b:dev
 
 docker-down:
