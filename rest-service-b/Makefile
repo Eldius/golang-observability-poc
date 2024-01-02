@@ -18,7 +18,6 @@ build-docker:
 	@echo "COMMIT_HASH: $(COMMIT_HASH)"
 	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
-		--no-cache \
 		-t eldius/service-b:dev \
 			.
 
@@ -80,8 +79,8 @@ docker-up-skywalking-k8s: docker-down build-docker
 		-m 16m \
 		--log-driver=fluentd \
 		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):4317" \
-		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):11800" \
+		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):55689" \
+		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):55689" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
