@@ -101,9 +101,9 @@ docker-up-opensearch-k8s: docker-down build-docker
 			eldius/service-a:dev
 
 docker-up-skywalking-k8s: docker-down build-docker
-	$(eval FLUENTBIT_HOST := $(shell ./../../golang-observability-k8s-env/fetch_ports.sh fluent-bit 24224 observability))
-	$(eval COLLECTOR_TRACE_HOST := $(shell ./../../golang-observability-k8s-env/fetch_ports.sh otel-collector 55689 observability))
-	$(eval COLLECTOR_METRICS_HOST := $(shell ./../../golang-observability-k8s-env/fetch_ports.sh otel-collector 55690 observability))
+	$(eval FLUENTBIT_HOST := $(shell ./../fetch_ports.sh fluent-bit 24224 observability))
+	$(eval COLLECTOR_TRACE_HOST := $(shell ./../fetch_ports.sh otel-collector 55689 observability))
+	$(eval COLLECTOR_METRICS_HOST := $(shell ./../fetch_ports.sh otel-collector 55690 observability))
 	docker run \
 		--rm \
 		--name service_a \

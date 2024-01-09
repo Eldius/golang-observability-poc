@@ -67,14 +67,6 @@ weather:
 watch-service-a:
 	watch -n 10 'curl -i localhost:8080/weather?city=Rio%20de%20Janeiro -H "Authorization: 854bf4f2-cb7d-11ed-bf82-00155d485640"'
 
-exporting:
-	docker run \
-		--name data-prepper \
-		--rm \
-		-p 4900:4900 \
-		-v ${PWD}/docker-environment/opensearch/configs/data:/usr/share/data-prepper/data \
-		-v ${PWD}/docker-environment/opensearch/configs/logstash.conf:/usr/share/data-prepper/pipelines/pipelines.conf opensearchproject/data-prepper:latest
-
 test-logs:
 	docker run \
 		--rm \
