@@ -15,7 +15,7 @@ RUN apk add --no-cache git make build-base
 RUN echo "-X 'github.com/eldius/rest-api/rest-service-b/internal/config.Version=${COMMIT_HASH}'"
 
 
-RUN go build \
+RUN --mount=type=cache,target="/root/.cache/go-build" go build \
     -o /app/app \
     -v \
     -a \

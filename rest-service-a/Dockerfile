@@ -4,6 +4,7 @@ FROM golang:1.21.5-alpine as builder
 ARG COMMIT_HASH
 
 ENV COMMIT_HASH=${COMMIT_HASH}
+ENV GOCACHE=/root/.cache/go-build
 
 WORKDIR /app
 COPY . /app
@@ -11,7 +12,7 @@ COPY . /app
 ENV CGO_ENABLED=0
 
 RUN apk add --no-cache git make build-base
-RUN go build \
+RUN --mount=type=cache,target="/root/.cache/go-build" go build \
     -o /app/app \
     -v \
     -a \
