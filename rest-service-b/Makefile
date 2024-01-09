@@ -71,6 +71,9 @@ docker-up-opensearch-k8s: docker-down build-docker
 
 
 docker-up-skywalking-k8s: docker-down build-docker
+	$(eval FLUENTBIT_HOST := $(shell ./../../golang-observability-k8s-env/fetch_ports.sh fluent-bit 24224 observability))
+	$(eval COLLECTOR_TRACE_HOST := $(shell ./../../golang-observability-k8s-env/fetch_ports.sh otel-collector 55689 observability))
+	$(eval COLLECTOR_METRICS_HOST := $(shell ./../../golang-observability-k8s-env/fetch_ports.sh otel-collector 55690 observability))
 	docker run \
 		--rm \
 		--name service_b \
@@ -78,13 +81,14 @@ docker-up-skywalking-k8s: docker-down build-docker
 		-d \
 		-m 16m \
 		--log-driver=fluentd \
-		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):55689" \
-		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):55689" \
+		--log-opt "fluentd-address=$(FLUENTBIT_HOST)" \
+		-e "API_OTEL_TRACE_ENDPOINT=$(COLLECTOR_TRACE_HOST)" \
+		-e "API_OTEL_METRICS_ENDPOINT=$(COLLECTOR_METRICS_HOST)" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
-		-e "API_DB_HOST=$(CLUSTER_IP)" \
+		-e "API_DB_HOST=192.168.100.101" \
+		-e "API_DB_PORT=32277" \
 		-e "API_DB_PASS=P@ss" \
 		-e "API_LOG_FORMAT=json" \
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
