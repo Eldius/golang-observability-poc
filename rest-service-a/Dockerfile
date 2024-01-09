@@ -12,7 +12,7 @@ COPY . /app
 ENV CGO_ENABLED=0
 
 RUN apk add --no-cache git make build-base
-RUN --mount=type=cache,target="/root/.cache/go-build" go build \
+RUN go build \
     -o /app/app \
     -v \
     -a \
