@@ -47,11 +47,10 @@ func open() (*sqlx.DB, error) {
 
 func getDBConnectionString() string {
 	return fmt.Sprintf(
-		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		"postgres://%s:%s@%s/%s?sslmode=disable",
 		config.GetDBUser(),
 		config.GetDBPass(),
 		config.GetDBHost(),
-		config.GetDBPort(),
 		config.GetDBName(),
 	)
 }

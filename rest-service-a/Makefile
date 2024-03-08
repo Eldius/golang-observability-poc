@@ -1,6 +1,4 @@
 
-CLUSTER_IP := 192.168.100.196
-
 start:
 	$(eval OTEL_ENDPOINT := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jaeger))
 	$(eval DB_HOST := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres))
@@ -81,6 +79,16 @@ docker-up-opensearch: docker-down build-docker
 			eldius/service-a:dev
 
 docker-up-opensearch-k8s: docker-down build-docker
+	$(eval FLUENTBIT_HOST := $(shell ./../fetch_ports.sh fluent-bit 24224 observability))
+	$(eval COLLECTOR_TRACE_HOST := $(shell ./../fetch_ports.sh otel-collector 55689 observability))
+	$(eval COLLECTOR_METRICS_HOST := $(shell ./../fetch_ports.sh otel-collector 55690 observability))
+	$(eval DB_HOST := $(shell ./../fetch_ports.sh postgres 5432 databases))
+
+	@echo "FLUENTBIT_HOST:        $(FLUENTBIT_HOST)"
+	@echo "COLLECTOR_TRACE_HOST:  $(COLLECTOR_TRACE_HOST)"
+	@echo "COLLECTOR_TRACE_HOST:  $(COLLECTOR_TRACE_HOST)"
+	@echo "DB_HOST:               $(DB_HOST)"
+
 	docker run \
 		--rm \
 		--name service_a \
@@ -89,13 +97,14 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-m 16m \
 		-p 8080:8080 \
 		--log-driver=fluentd \
-		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):21890" \
-		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):21891" \
+		--log-opt fluentd-address=$(FLUENTBIT_HOST) \
+		-e "API_OTEL_TRACE_ENDPOINT=$(COLLECTOR_TRACE_HOST)" \
+		-e "API_OTEL_METRICS_ENDPOINT=$(COLLECTOR_METRICS_HOST)" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
-		-e "API_DB_HOST=$(CLUSTER_IP)" \
+		-e "API_DB_HOST=$(DB_HOST)" \
+		-e "API_DB_USER=rest_api" \
 		-e "API_DB_PASS=P@ss" \
 		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev

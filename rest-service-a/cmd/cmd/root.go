@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/api"
@@ -8,6 +9,7 @@ import (
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/db"
 	"github.com/spf13/cobra"
 	"os"
+	"time"
 )
 
 // rootCmd represents the base command when called without any subcommands.
@@ -15,7 +17,7 @@ var rootCmd = &cobra.Command{
 	Use:   "rest-service-a",
 	Short: "A simple rest api to test some concepts",
 	Long:  `A simple rest api to test some concepts.`,
-	PersistentPreRun: func(_ *cobra.Command, _ []string) {
+	PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
 		config.Setup(cfgFile)
 		logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName())
 		telemetry.InitTelemetry(
@@ -25,7 +27,13 @@ var rootCmd = &cobra.Command{
 			telemetry.WithVersion(config.GetVersion()),
 			telemetry.WithServiceName(config.GetServiceName()),
 		)
-		_ = db.Migrations() //nolint:errcheck // should not fail if an error occur
+		if err := db.Migrations(); err != nil {
+			err = fmt.Errorf("running migrations: %w", err)
+			time.Sleep(10 * time.Second)
+			logger.Logger().WithError(err).Fatal("failed to run migrations")
+			return err
+		}
+		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		api.Start(apiPort)

@@ -22,10 +22,6 @@ func GetDBHost() string {
 	return viper.GetString("db.host")
 }
 
-func GetDBPort() int {
-	return viper.GetInt("db.port")
-}
-
 func GetDBUser() string {
 	return viper.GetString("db.user")
 }

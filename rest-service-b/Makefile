@@ -53,46 +53,25 @@ docker-up-opensearch: build-docker docker-down
 			eldius/service-b:dev
 
 docker-up-opensearch-k8s: docker-down build-docker
-	docker run \
-		--rm \
-		--name service_b \
-		-d \
-		-m 16m \
-		--network services_network \
-		--log-driver=fluentd \
-		--log-opt fluentd-address=$(CLUSTER_IP):24224 \
-		-e "API_OTEL_TRACE_ENDPOINT=$(CLUSTER_IP):21890" \
-		-e "API_OTEL_METRICS_ENDPOINT=$(CLUSTER_IP):21891" \
-		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_LOG_LEVEL=trace" \
-		-e "API_LOG_FORMAT=json" \
-		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
-			eldius/service-b:dev
-
-
-docker-up-skywalking-k8s: docker-down build-docker
 	$(eval FLUENTBIT_HOST := $(shell ./../fetch_ports.sh fluent-bit 24224 observability))
 	$(eval COLLECTOR_TRACE_HOST := $(shell ./../fetch_ports.sh otel-collector 55689 observability))
-	$(eval COLLECTOR_METRICS_HOST := $(shell ../fetch_ports.sh otel-collector 55690 observability))
+	$(eval COLLECTOR_METRICS_HOST := $(shell ./../fetch_ports.sh otel-collector 55690 observability))
 	docker run \
 		--rm \
 		--name service_b \
-		--network services_network \
 		-d \
 		-m 16m \
+		--network services_network \
 		--log-driver=fluentd \
-		--log-opt "fluentd-address=$(FLUENTBIT_HOST)" \
+		--log-opt fluentd-address=$(FLUENTBIT_HOST) \
 		-e "API_OTEL_TRACE_ENDPOINT=$(COLLECTOR_TRACE_HOST)" \
 		-e "API_OTEL_METRICS_ENDPOINT=$(COLLECTOR_METRICS_HOST)" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
-		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
-		-e "API_DB_HOST=192.168.100.101" \
-		-e "API_DB_PORT=32277" \
-		-e "API_DB_PASS=P@ss" \
 		-e "API_LOG_FORMAT=json" \
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
 			eldius/service-b:dev
+
 
 docker-down:
 	-docker kill service_b
