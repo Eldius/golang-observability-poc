@@ -1,0 +1,482 @@
+repo_name: Eldius/golang-observability-poc
+report_id: 4f17f80238bfe1a9c012f88fed905958
+version: 0.1
+repo_type: Public
+timestamp: '2024-05-31T20:45:19+00:00'
+requested_by: Eldius
+provider: github
+branch: main
+detected_tools_count: 35
+tools:
+- name: Golang
+  description: An open source programming language that makes it easy to build simple,
+    reliable, and efficient software
+  website_url: http://golang.org/
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1005/O6AczwfV_400x400.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc
+  detection_source: Repo Metadata
+- name: SQL
+  description: It is a domain-specific language used in programming
+  website_url: https://en.wikipedia.org/wiki/SQL
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/2271/default_068d33483bba6b81ee13fbd4dc7aab9780896a54.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/db/migrations/20230327125907-create_auth_tables.sql
+  detection_source: rest-service-a/db/migrations/20230327125907-create_auth_tables.sql
+  last_updated_by: Eldio Santos
+  last_updated_on: 2023-03-27 17:06:45.000000000 Z
+- name: Protobuf
+  description: Google's data interchange format
+  website_url: https://developers.google.com/protocol-buffers/
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Serialization Frameworks
+  image_url: https://img.stackshare.io/service/4393/ma2jqJKH_400x400.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.mod
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: gRPC
+  description: A high performance, open-source universal RPC framework
+  website_url: https://grpc.io/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Remote Procedure Call (RPC)
+  image_url: https://img.stackshare.io/service/4670/default_d811b0ac72205af84aca21f967594338580be913.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.mod
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-29 15:17:07.000000000 Z
+- name: Docker
+  description: Enterprise Container Platform for High-Velocity Innovation.
+  website_url: https://www.docker.com/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Virtual Machine Platforms & Containers
+  image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc
+  detection_source: Repo Metadata
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc
+  detection_source: Repo Metadata
+- name: Shell
+  description: A shell is a text-based terminal, used for manipulating programs and
+    files. Shell scripts typically manage program execution.
+  website_url: https://en.wikipedia.org/wiki/Shell_script
+  open_source: false
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc
+  detection_source: Repo Metadata
+- name: afero
+  description: A FileSystem Abstraction System for Go
+  package_url: https://pkg.go.dev/github.com/spf13/afero
+  version: 1.11.0
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: atomic
+  description: Wrapper types for sync/atomic which enforce atomic access
+  package_url: https://pkg.go.dev/go.uber.org/atomic
+  version: 1.9.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: cast
+  description: Safe and easy casting from one type to another in Go
+  package_url: https://pkg.go.dev/github.com/spf13/cast
+  version: 1.6.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: cobra
+  description: A Commander for modern Go CLI interactions
+  package_url: https://pkg.go.dev/github.com/spf13/cobra
+  version: 1.8.0
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: errors
+  description: Simple error handling primitives
+  package_url: https://pkg.go.dev/github.com/pkg/errors
+  version: 0.9.1
+  license: BSD-2-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-04-28 00:05:12.000000000 Z
+- name: exp
+  description: Experimental and deprecated packages
+  package_url: https://pkg.go.dev/golang.org/x/exp
+  version: 0.0.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-25 22:26:21.000000000 Z
+- name: fsnotify
+  description: Cross-platform file system notifications for Go
+  package_url: https://pkg.go.dev/github.com/fsnotify/fsnotify
+  version: 1.7.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: go-colorable
+  description: Go-colorable Colorable writer for windows
+  package_url: https://pkg.go.dev/github.com/mattn/go-colorable
+  version: 0.1.13
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: go-isatty
+  description: Package isatty implements interface to isatty
+  package_url: https://pkg.go.dev/github.com/mattn/go-isatty
+  version: 0.0.16
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: gotenv
+  description: Load environment variables dynamically in Go
+  package_url: https://pkg.go.dev/github.com/subosito/gotenv
+  version: 1.6.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: hcl
+  description: HCL is the HashiCorp configuration language
+  package_url: https://pkg.go.dev/github.com/hashicorp/hcl
+  version: 1.0.0
+  license: MPL-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-25 22:26:21.000000000 Z
+- name: httpsnoop
+  description: Package httpsnoop provides an easy way to capture http related metrics
+  package_url: https://pkg.go.dev/github.com/felixge/httpsnoop
+  version: 1.0.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: ini.v1
+  description: Package ini provides INI file read and write functionality in Go
+  package_url: https://pkg.go.dev/gopkg.in/ini.v1
+  version: 1.67.0
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-25 22:26:21.000000000 Z
+- name: logr
+  description: A simple logging interface for Go
+  package_url: https://pkg.go.dev/github.com/go-logr/logr
+  version: 1.2.0
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: logrus
+  description: Structured, pluggable logging for Go
+  package_url: https://pkg.go.dev/github.com/sirupsen/logrus
+  version: 1.9.3
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: mapstructure
+  description: Go library for decoding generic map values into native Go structures
+  package_url: https://pkg.go.dev/github.com/mitchellh/mapstructure
+  version: 1.5.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: mousetrap
+  description: Detect starting from Windows explorer
+  package_url: https://pkg.go.dev/github.com/inconshreveable/mousetrap
+  version: 1.1.0
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-06-11 23:21:37.000000000 Z
+- name: net
+  description: Go supplementary network libraries
+  package_url: https://pkg.go.dev/golang.org/x/net
+  version: 0.20.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-29 15:17:07.000000000 Z
+- name: pflag
+  description: Drop-in replacement for Go's flag package
+  package_url: https://pkg.go.dev/github.com/spf13/pflag
+  version: 1.0.5
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-25 22:26:21.000000000 Z
+- name: pq
+  description: Pure Go Postgres driver for database/sql
+  package_url: https://pkg.go.dev/github.com/lib/pq
+  version: 1.2.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-25 22:26:21.000000000 Z
+- name: properties
+  description: Java properties scanner for Go
+  package_url: https://pkg.go.dev/github.com/magiconair/properties
+  version: 1.8.7
+  license: BSD-2-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-25 22:26:21.000000000 Z
+- name: proto
+  description: Go support for Google's protocol buffers
+  package_url: https://pkg.go.dev/github.com/golang/protobuf/proto
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.mod
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: sql-migrate
+  description: SQL schema migration tool for Go
+  package_url: https://pkg.go.dev/github.com/rubenv/sql-migrate
+  version: 1.6.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: sqlx
+  description: General purpose extensions to golang's database/sql
+  package_url: https://pkg.go.dev/github.com/jmoiron/sqlx
+  version: 1.3.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-12-12 02:09:19.000000000 Z
+- name: sys
+  description: Go packages for low-level interaction with the operating system
+  package_url: https://pkg.go.dev/golang.org/x/sys
+  version: 0.0.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2023-03-29 15:17:07.000000000 Z
+- name: text
+  description: Go text processing support
+  package_url: https://pkg.go.dev/golang.org/x/text
+  version: 0.14.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/otel-instrumentation-helper/go.sum
+  detection_source: otel-instrumentation-helper/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: viper
+  description: Go configuration with fangs
+  package_url: https://pkg.go.dev/github.com/spf13/viper
+  version: 1.18.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
+- name: zerolog
+  description: Zero Allocation JSON Logger
+  package_url: https://pkg.go.dev/github.com/rs/zerolog
+  version: 1.32.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Go Modules Packages
+  image_url: https://img.stackshare.io/package/go-packages/image.png
+  detection_source_url: https://github.com/Eldius/golang-observability-poc/blob/main/rest-service-a/go.sum
+  detection_source: rest-service-a/go.mod
+  last_updated_by: eldius
+  last_updated_on: 2024-03-07 22:35:41.000000000 Z
