@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel/trace"
+	"log/slog"
 	"net"
 	"net/http"
 	"time"
@@ -17,7 +17,7 @@ func SetupRequestLog(r *chi.Mux) {
 }
 
 // ReqLogger returns a request logging middleware
-func ReqLogger(category string, logger logrus.FieldLogger) func(h http.Handler) http.Handler {
+func ReqLogger(category string, logger *slog.Logger) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			reqID := middleware.GetReqID(r.Context())
@@ -33,24 +33,24 @@ func ReqLogger(category string, logger logrus.FieldLogger) func(h http.Handler) 
 					scheme = "https"
 				}
 				span := trace.SpanFromContext(r.Context())
-				fields := logrus.Fields{
-					"status_code":      ww.Status(),
-					"bytes":            ww.BytesWritten(),
-					"duration":         int64(time.Since(t1)),
-					"duration_display": time.Since(t1).String(),
-					"category":         category,
-					"remote_ip":        remoteIP,
-					"proto":            r.Proto,
-					"method":           r.Method,
-					"trace_id":         span.SpanContext().TraceID().String(),
-					"span_id":          span.SpanContext().SpanID().String(),
-					"path":             r.RequestURI,
-					"url":              fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI),
+				fields := []slog.Attr{
+					slog.Int("status_code", ww.Status()),
+					slog.Int("bytes", ww.BytesWritten()),
+					slog.Int64("duration", int64(time.Since(t1))),
+					slog.String("duration_display", time.Since(t1).String()),
+					slog.String("category", category),
+					slog.String("remote_ip", remoteIP),
+					slog.String("proto", r.Proto),
+					slog.String("method", r.Method),
+					slog.String("trace_id", span.SpanContext().TraceID().String()),
+					slog.String("span_id", span.SpanContext().SpanID().String()),
+					slog.String("path", r.RequestURI),
+					slog.String("url", fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI)),
 				}
 				if len(reqID) > 0 {
-					fields["request_id"] = reqID
+					fields = append(fields, slog.String("request_id", reqID))
 				}
-				logger.WithFields(fields).Infof("RequestReceived")
+				logger.With(fields).Info("RequestReceived")
 			}()
 
 			h.ServeHTTP(ww, r)
