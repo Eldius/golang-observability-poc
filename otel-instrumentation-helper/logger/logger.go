@@ -2,71 +2,94 @@ package logger
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
-	"os"
-	"strings"
-
+	"fmt"
 	"go.opentelemetry.io/otel/trace"
+	"io"
+	"log/slog"
+	"os"
+	"slices"
+	"strings"
 )
 
 var (
+	logKeys = []string{
+		"host",
+		"level",
+		"message",
+		"time",
+		"error",
+		"source",
+		"function",
+		"file",
+		"line",
+	}
+
 	logger *slog.Logger
 )
 
-func GetLogger(ctx context.Context) *logrus.Entry {
+func GetLogger(ctx context.Context) *slog.Logger {
 	span := trace.SpanFromContext(ctx)
 
-	return logger.WithFields(logrus.Fields{
-		"trace_id": span.SpanContext().TraceID().String(),
-		"span_id":  span.SpanContext().SpanID().String(),
-	})
+	return logger.With(
+		slog.String("trace_id", span.SpanContext().TraceID().String()),
+		slog.String("span_id", span.SpanContext().SpanID().String()),
+	)
 }
 
-func Logger() *logrus.Entry {
+func Logger() *slog.Logger {
 	return logger
 }
 
-func SetupLogs(logLevel, logFormat, service string) {
-	var logFormatter logrus.Formatter
-	// Log as JSON instead of the default ASCII formatter.
-	if strings.ToLower(logFormat) == "json" {
-		logFormatter = &logrus.JSONFormatter{}
-	} else {
-		logFormatter = &logrus.TextFormatter{
-			ForceColors:   true,
-			FullTimestamp: true,
+func SetupLogs(logLevel, logFormat, service string) error {
+	var h slog.Handler
+	var w io.Writer = os.Stdout
+
+	replaceAttrFunc := func(groups []string, a slog.Attr) slog.Attr {
+		if slices.Contains(logKeys, a.Key) {
+			return a
 		}
+		if strings.HasPrefix(a.Key, "request.") || strings.HasPrefix(a.Key, "response.") || strings.HasPrefix(a.Key, "service.") {
+			return a
+		}
+		if a.Key == "msg" {
+			a.Key = "message"
+			return a
+		}
+		a.Key = fmt.Sprintf("custom.%s.%s", service, a.Key)
+		return a
 	}
 
-	logrus.SetFormatter(logFormatter)
-	logrus.SetReportCaller(true)
+	h = slog.NewJSONHandler(w, &slog.HandlerOptions{
+		AddSource:   true,
+		Level:       parseLogLevel(logLevel),
+		ReplaceAttr: replaceAttrFunc,
+	})
+	logger := slog.New(h)
+	host, err := os.Hostname()
+	if err != nil {
+		panic(err)
+	}
 
-	logLevel = strings.ToLower(logLevel)
+	slog.SetDefault(logger.With(
+		slog.String("service.name", service),
+		slog.String("host", host),
+	))
+
+	return nil
+}
+
+func parseLogLevel(logLevel string) slog.Level {
 	switch strings.ToLower(logLevel) {
-	case "panic":
-		logrus.SetLevel(logrus.PanicLevel)
-	case "fatal":
-		logrus.SetLevel(logrus.FatalLevel)
 	case "error":
-		logrus.SetLevel(logrus.ErrorLevel)
+		return slog.LevelError
 	case "warn":
-		logrus.SetLevel(logrus.WarnLevel)
+		return slog.LevelWarn
 	case "info":
-		logrus.SetLevel(logrus.InfoLevel)
+
+		return slog.LevelInfo
 	case "debug":
-		logrus.SetLevel(logrus.DebugLevel)
-	case "trace":
-		logrus.SetLevel(logrus.TraceLevel)
+		return slog.LevelDebug
 	default:
-		logrus.SetLevel(logrus.DebugLevel)
+		return slog.LevelInfo
 	}
-
-	hostname, _ := os.Hostname()
-	var standardFields = logrus.Fields{
-		"hostname": hostname,
-		"service":  service,
-	}
-	logger = logrus.StandardLogger().WithFields(standardFields)
-
-	logger.WithField("setup_log_level", logrus.GetLevel()).Info("SetupLogsEnd")
 }

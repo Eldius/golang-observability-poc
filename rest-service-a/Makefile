@@ -119,8 +119,8 @@ docker-up-grafana: docker-down build-docker
 		-d \
 		-m 16m \
 		-p 5432:5432 \
-		-e "POSTGRES_USER=root" \
-		-e "POSTGRES_DB=root" \
+		-e "POSTGRES_USER=rest_api" \
+		-e "POSTGRES_DB=rest_api" \
 		-e "POSTGRES_PASSWORD=P@ss" \
 		  	postgres
 
