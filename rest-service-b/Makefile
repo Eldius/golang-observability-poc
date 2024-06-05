@@ -72,6 +72,25 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
 			eldius/service-b:dev
 
+docker-up-grafana: docker-down build-docker
+	docker run \
+		--rm \
+		--name service_b \
+		-d \
+		-m 16m \
+		--network services_network \
+		--log-driver=loki \
+		--log-opt loki-url="http://192.168.0.68:3100/loki/api/v1/push" \
+		--log-opt loki-external-labels="container_name={{.Name}},cluster=compose,container_id={{.ID}}" \
+		-e "API_OTEL_TRACE_ENDPOINT=192.169.0.68:55689" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.169.0.68:55690" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+		-e "API_LOG_FORMAT=json" \
+		-e "API_INTEGRATION_WEATHER_APIKEY=$(WEATHER_APIKEY)" \
+			eldius/service-b:dev
+
 
 docker-down:
 	-docker kill service_b

@@ -109,6 +109,42 @@ docker-up-opensearch-k8s: docker-down build-docker
 		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev
 
+docker-up-grafana: docker-down build-docker
+	-docker kill db
+	-docker rm db
+	docker run \
+		--rm \
+		--name db \
+		--network services_network \
+		-d \
+		-m 16m \
+		-p 5432:5432 \
+		-e "POSTGRES_USER=root" \
+		-e "POSTGRES_DB=root" \
+		-e "POSTGRES_PASSWORD=P@ss" \
+		  	postgres
+
+	docker run \
+		--rm \
+		--name service_a \
+		--network services_network \
+		-d \
+		-m 16m \
+		-p 8080:8080 \
+		--log-driver=loki \
+		--log-opt loki-url="http://192.168.0.68:3100/loki/api/v1/push" \
+		--log-opt loki-external-labels="container_name={{.Name}},cluster=compose,container_id={{.ID}}" \
+		-e "API_OTEL_TRACE_ENDPOINT=192.169.0.68:55689" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.169.0.68:55690" \
+		-e "API_TELEMETRY_REST_ENABLE=true" \
+		-e "API_TELEMETRY_DB_ENABLE=true" \
+		-e "API_LOG_LEVEL=trace" \
+		-e "API_DB_HOST=db" \
+		-e "API_DB_USER=rest_api" \
+		-e "API_DB_PASS=P@ss" \
+		-e "API_LOG_FORMAT=json" \
+			eldius/service-a:dev
+
 docker-up-skywalking-k8s: docker-down build-docker
 	$(eval FLUENTBIT_HOST := $(shell ./../fetch_ports.sh fluent-bit 24224 observability))
 	$(eval COLLECTOR_TRACE_HOST := $(shell ./../fetch_ports.sh otel-collector 55689 observability))

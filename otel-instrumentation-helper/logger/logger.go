@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	logger *logrus.Entry
+	logger *slog.Logger
 )
 
 func GetLogger(ctx context.Context) *logrus.Entry {

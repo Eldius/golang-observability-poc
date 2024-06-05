@@ -1,6 +1,6 @@
 module github.com/eldius/golang-observability-poc/rest-service-b
 
-go 1.22.1
+go 1.22.4
 
 require (
 	github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240109215722-b9b26420ab3d

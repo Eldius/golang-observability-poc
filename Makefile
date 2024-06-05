@@ -18,6 +18,13 @@ services-opensearch-k8s: $(APIS) services-network
 		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-opensearch-k8s || exit 1; \
 	done
 
+services-grafana: $(APIS) services-network
+	@echo "WEATHER_APIKEY: $(WEATHER_APIKEY)"
+	@echo "Services starting - Opensearch..."
+	for dir in $(APIS); do \
+		WEATHER_APIKEY=$(WEATHER_APIKEY) $(MAKE) -C $$dir docker-up-grafana || exit 1; \
+	done
+
 services-down: services-network-down
 	@echo "Services stopping..."
 	for dir in $(APIS); do \
