@@ -2,11 +2,12 @@ package httpclient
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"log/slog"
 	"net/http"
 )
 
@@ -41,11 +42,12 @@ func MakeRequest(ctx context.Context, url, method string, opts ...Option) (*http
 		req.Header.Set(k, fmt.Sprintf("%v", v))
 	}
 
-	l := logger.GetLogger(ctx).WithFields(logrus.Fields{
-		"url":     url,
-		"method":  req.Method,
-		"headers": opt.headers,
-	})
+	h, _ := json.Marshal(opt.headers)
+	l := logger.GetLogger(ctx).With(
+		slog.String("url", url),
+		slog.String("method", req.Method),
+		slog.String("headers", string(h)),
+	)
 
 	l.Debug("preparing to make a request")
 

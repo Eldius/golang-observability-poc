@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"os/signal"
 
@@ -67,7 +68,7 @@ func initTracerProvider(opt *options) trace.TracerProvider {
 
 func otelTraceExporter(opt *options) sdktrace.SpanExporter {
 	l := logger.Logger()
-	l.Debugf("configuring trace export for '%s'", opt.tracesEndpoint)
+	l.With(slog.String("metrics.endpoint", opt.metricsEndpoint)).Debug("configuring trace exporter")
 
 	var err error
 	conn, err := grpc.DialContext(
@@ -78,12 +79,14 @@ func otelTraceExporter(opt *options) sdktrace.SpanExporter {
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		l.WithError(err).Fatal("failed to create gRPC connection to collector")
+		l.With("error", err).Error("failed to create gRPC connection to collector")
+		panic(err)
 	}
 
 	exporter, err := otlptracegrpc.New(opt.ctx, otlptracegrpc.WithGRPCConn(conn))
 	if err != nil {
-		l.WithError(err).Fatal("failed to setup exporter")
+		l.With("error", err).Error("failed to setup exporter")
+		panic(err)
 	}
 
 	return exporter
@@ -94,7 +97,7 @@ func waitTraces(tp trace.TracerProvider) {
 		if p, ok := tp.(*sdktrace.TracerProvider); ok {
 			l := logger.Logger()
 			if err := p.Shutdown(context.Background()); err != nil {
-				l.WithError(err).Debug("error shutting down tracer provider")
+				l.With("error", err).Debug("error shutting down tracer provider")
 			}
 		}
 	}()

@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"os/signal"
 	"time"
@@ -32,7 +33,7 @@ func initMetrics(opt *options) {
 
 	l.Debug("starting runtime instrumentation")
 	if err := runtime.Start(runtime.WithMinimumReadMemStatsInterval(time.Second)); err != nil {
-		l.WithError(err).Warn("failed to start runtime monitoring")
+		l.With("error", err).Warn("failed to start runtime monitoring")
 		return
 	}
 
@@ -69,7 +70,7 @@ func defaultResources(opt *options) *resource.Resource {
 
 func otelMetricsExporter(opt *options) metric.Exporter {
 	l := logger.Logger()
-	l.Debugf("configuring metric export for '%s'", opt.metricsEndpoint)
+	l.With(slog.String("metrics.endpoint", opt.metricsEndpoint)).Debug("configuring metric exporter")
 
 	var opts []otlpmetricgrpc.Option
 
@@ -84,7 +85,7 @@ func otelMetricsExporter(opt *options) metric.Exporter {
 		opts...,
 	)
 	if err != nil {
-		l.WithError(err).Warn("failed to configure otel metrics exporter")
+		l.With("error", err).Warn("failed to configure otel metrics exporter")
 		return nil
 	}
 
@@ -96,7 +97,7 @@ func waitMetrics(mp otelmetric.MeterProvider) {
 		if p, ok := mp.(*metric.MeterProvider); ok {
 			l := logger.Logger()
 			if err := p.Shutdown(context.Background()); err != nil {
-				l.WithError(err).Debug("error shutting down metric provider")
+				l.With("error", err).Debug("error shutting down metric provider")
 			}
 		}
 	}()
