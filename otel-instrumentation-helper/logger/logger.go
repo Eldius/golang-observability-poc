@@ -64,7 +64,7 @@ func SetupLogs(logLevel, service string) error {
 		Level:       parseLogLevel(logLevel),
 		ReplaceAttr: replaceAttrFunc,
 	})
-	logger := slog.New(h)
+	logger = slog.New(h)
 	host, err := os.Hostname()
 	if err != nil {
 		panic(err)
