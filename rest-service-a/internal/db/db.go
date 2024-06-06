@@ -20,8 +20,9 @@ func DB() *sqlx.DB {
 		if err != nil {
 			err = errors.Wrap(err, "failed to open db connection")
 			logger.Logger().
-				WithError(err).
-				Fatal("failed to create db pool")
+				With("error", err).
+				Error("failed to create db pool")
+			panic(err)
 		}
 		db = _db
 	}

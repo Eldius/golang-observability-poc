@@ -10,6 +10,7 @@ import (
 	"github.com/eldius/golang-observability-poc/rest-service-b/internal/config"
 	"github.com/pkg/errors"
 	"io"
+	"log/slog"
 	"net/url"
 )
 
@@ -25,7 +26,7 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 	if err != nil {
 		err = errors.Wrap(err, "failed to parse endpoint")
 		telemetry.NotifyError(ctx, err)
-		l.WithError(err).Error("error parsing endpoint")
+		l.With("error", err).Error("error parsing endpoint")
 		return nil, err
 	}
 	q := endpoint.Query()
@@ -33,12 +34,12 @@ func GetWeather(ctx context.Context, city string) (*Weather, error) {
 
 	endpoint.RawQuery = q.Encode()
 
-	l.WithField("api_key", config.GetWeatherServiceAPIKey()).Info("integrating")
+	l.With(slog.String("api_key", config.GetWeatherServiceAPIKey())).Info("integrating")
 	resp, err := httpclient.GetRequest(ctx, endpoint.String(), httpclient.WithHeader("x-api-key", config.GetWeatherServiceAPIKey()))
 	if err != nil {
 		err = errors.Wrap(err, "failed to call external weather integration")
 		telemetry.NotifyError(ctx, err)
-		l.WithError(err).Error("error requesting weather api")
+		l.With("error", err).Error("error requesting weather api")
 		return nil, err
 	}
 	defer func() {

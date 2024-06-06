@@ -36,6 +36,8 @@ update-library:
 
 
 docker-down:
+	-docker kill db
+	-docker rm db
 	-docker kill service_a
 	-docker rm service_a
 
@@ -110,8 +112,6 @@ docker-up-opensearch-k8s: docker-down build-docker
 			eldius/service-a:dev
 
 docker-up-grafana: docker-down build-docker
-	-docker kill db
-	-docker rm db
 	docker run \
 		--rm \
 		--name db \

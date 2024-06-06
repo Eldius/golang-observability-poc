@@ -7,6 +7,7 @@ import (
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/jmoiron/sqlx"
 	"github.com/rs/zerolog/log"
+	"log/slog"
 	"net/http"
 	"strings"
 )
@@ -52,13 +53,13 @@ func AuthAPIKey(_ string, db *sqlx.DB) func(next http.Handler) http.Handler {
 					"select id, name, username, api_key from api_users where api_key = $1",
 					authHeader,
 				); err != nil {
-					l.WithError(err).WithField("api_key", authHeader).Error("failed to query db")
+					l.With("error", err).With(slog.String("api_key", authHeader)).Error("failed to query db")
 					w.WriteHeader(http.StatusInternalServerError)
 					telemetry.NotifyError(r.Context(), err)
 					return
 				}
 				if len(results) != 1 {
-					l.WithField("api_key", authHeader).Warnf("wrong query results count: %d", len(results))
+					l.With(slog.String("api_key", authHeader), slog.Int("users_query_results_count", len(results))).Warn("wrong query results count")
 					w.WriteHeader(http.StatusUnauthorized)
 					telemetry.NotifyError(r.Context(), errors.New("unauthorized request"))
 					return
@@ -67,7 +68,7 @@ func AuthAPIKey(_ string, db *sqlx.DB) func(next http.Handler) http.Handler {
 
 				telemetry.AddAttribute(ctx, "user", results[0].Username)
 
-				l.WithField("api_key", authHeader).Debugf("right query results count: %d", len(results))
+				l.With(slog.String("api_key", authHeader), slog.Int("users_query_results_count", len(results))).Debug("right query results count")
 			}
 
 			next.ServeHTTP(w, r.WithContext(ctx))

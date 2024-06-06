@@ -19,7 +19,9 @@ var rootCmd = &cobra.Command{
 	Long:  `A simple rest api to test some concepts.`,
 	PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
 		config.Setup(cfgFile)
-		logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName())
+		if err := logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName()); err != nil {
+			return err
+		}
 		telemetry.InitTelemetry(
 			telemetry.WithEnvironment(config.GetEnvironment()),
 			telemetry.WithMetricsEndpoint(config.GetOtelMetricsEndpoint()),
@@ -30,7 +32,7 @@ var rootCmd = &cobra.Command{
 		if err := db.Migrations(); err != nil {
 			err = fmt.Errorf("running migrations: %w", err)
 			time.Sleep(10 * time.Second)
-			logger.Logger().WithError(err).Fatal("failed to run migrations")
+			logger.Logger().With("error", err).Error("failed to run migrations")
 			return err
 		}
 		return nil

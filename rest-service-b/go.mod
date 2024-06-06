@@ -3,10 +3,9 @@ module github.com/eldius/golang-observability-poc/rest-service-b
 go 1.22.4
 
 require (
-	github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240605232039-5b13c643c97b
+	github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240605233502-e64f0fe71b90
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/pkg/errors v0.9.1
-	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 )

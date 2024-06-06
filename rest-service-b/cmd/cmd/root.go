@@ -15,9 +15,11 @@ var rootCmd = &cobra.Command{
 	Use:   "rest-service-b",
 	Short: "Another simple rest api to test some concepts",
 	Long:  `Another simple rest api to test some concepts.`,
-	PersistentPreRun: func(_ *cobra.Command, _ []string) {
+	PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
 		config.Setup(cfgFile)
-		logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName())
+		if err := logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName()); err != nil {
+			return err
+		}
 		telemetry.InitTelemetry(
 			telemetry.WithEnvironment(config.GetEnvironment()),
 			telemetry.WithMetricsEndpoint(config.GetOtelMetricsEndpoint()),
@@ -25,6 +27,8 @@ var rootCmd = &cobra.Command{
 			telemetry.WithVersion(config.GetVersion()),
 			telemetry.WithServiceName(config.GetServiceName()),
 		)
+
+		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		api.Start(apiPort)

@@ -6,6 +6,7 @@ import (
 	_ "github.com/lib/pq" // we need the Postgres driver
 	"github.com/pkg/errors"
 	migrate "github.com/rubenv/sql-migrate"
+	"log/slog"
 )
 
 func Migrations() error {
@@ -20,18 +21,18 @@ func Migrations() error {
 		migInfo, err := migrations.FindMigrations()
 		if err != nil {
 			err = errors.Wrap(err, "failed to find migrations")
-			l.WithError(err).Error("failed to find migrations")
+			l.With("error", err).Error("failed to find migrations")
 			return err
 		}
-		l.WithField("migrations_to_do", len(migInfo)).Infof("running migrations begin")
+		l.With(slog.Int("migrations_to_do", len(migInfo))).Info("running migrations begin")
 
 		n, err := migrate.Exec(db.DB, "postgres", migrations, migrate.Up)
 		if err != nil {
 			err = errors.Wrap(err, "failed to execute migrations")
-			l.WithError(err).Error("failed to run migrations")
+			l.With("error", err).Error("failed to run migrations")
 			return err
 		}
-		l.WithField("migrations_done", n).Info("running migrations end")
+		l.With(slog.Int("migrations_done", n)).Info("running migrations end")
 	}
 
 	return nil

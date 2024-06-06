@@ -7,7 +7,7 @@ import (
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-b/internal/weather"
 	"github.com/go-chi/chi/v5"
-	"github.com/sirupsen/logrus"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -30,10 +30,11 @@ func Start(port int) {
 		Handler:           r,
 		ReadHeaderTimeout: 100 * time.Millisecond,
 	}
-	l.WithField("addr", srv.Addr).
+	l.With(slog.String("addr", srv.Addr)).
 		Info("starting")
 	if err := srv.ListenAndServe(); err != nil {
-		l.WithError(err).Fatal("filed to start server")
+		l.With("error", err).Error("filed to start server")
+		panic(err)
 	}
 }
 
@@ -41,7 +42,7 @@ func homeHandlerfunc(w http.ResponseWriter, r *http.Request) {
 
 	l := logger.GetLogger(r.Context())
 	l.Info("get root begin")
-	l.Infof("testing: %s", r.Context())
+	l.Info("testing: %s", r.Context())
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("home")) //nolint:errcheck // ignoring error
@@ -60,9 +61,7 @@ func weatherHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	we, err := weather.GetWeather(r.Context(), c)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		logger.GetLogger(r.Context()).WithFields(logrus.Fields{
-			"city": c,
-		}).WithError(err).
+		logger.GetLogger(r.Context()).With("error", err).With(slog.String("city", c)).
 			Error("error getting external weather")
 		_, _ = w.Write([]byte(err.Error())) //nolint:errcheck // ignoring error
 		return
