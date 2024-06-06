@@ -17,7 +17,7 @@ var rootCmd = &cobra.Command{
 	Long:  `Another simple rest api to test some concepts.`,
 	PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
 		config.Setup(cfgFile)
-		if err := logger.SetupLogs(config.GetLogLevel(), config.GetLogFormat(), config.GetServiceName()); err != nil {
+		if err := logger.SetupLogs(config.GetLogLevel(), config.GetServiceName()); err != nil {
 			return err
 		}
 		telemetry.InitTelemetry(

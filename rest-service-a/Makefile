@@ -128,7 +128,6 @@ docker-up-grafana: docker-down build-docker
 		--rm \
 		--name service_a \
 		--network services_network \
-		-d \
 		-m 16m \
 		-p 8080:8080 \
 		--log-driver=loki \

@@ -40,7 +40,7 @@ func Logger() *slog.Logger {
 	return logger
 }
 
-func SetupLogs(logLevel, logFormat, service string) error {
+func SetupLogs(logLevel, service string) error {
 	var h slog.Handler
 	var w io.Writer = os.Stdout
 
