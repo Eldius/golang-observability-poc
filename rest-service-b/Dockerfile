@@ -11,10 +11,6 @@ COPY . /app
 ENV CGO_ENABLED=0
 
 RUN apk add --no-cache git make build-base
-
-RUN echo "-X 'github.com/eldius/rest-api/rest-service-b/internal/config.Version=${COMMIT_HASH}'"
-
-
 RUN go build \
     -o /app/app \
     -v \

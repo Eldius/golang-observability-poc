@@ -4,7 +4,6 @@ FROM golang:1.22.4-alpine3.19 as builder
 ARG COMMIT_HASH
 
 ENV COMMIT_HASH=${COMMIT_HASH}
-ENV GOCACHE=/root/.cache/go-build
 
 WORKDIR /app
 COPY . /app
