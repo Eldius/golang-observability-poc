@@ -82,8 +82,8 @@ docker-up-grafana: docker-down build-docker
 		--log-driver=loki \
 		--log-opt loki-url="http://192.168.0.68:3100/loki/api/v1/push" \
 		--log-opt loki-external-labels="container_name={{.Name}},cluster=compose,container_id={{.ID}}" \
-		-e "API_OTEL_TRACE_ENDPOINT=192.169.0.68:55689" \
-		-e "API_OTEL_METRICS_ENDPOINT=192.169.0.68:55690" \
+		-e "API_OTEL_TRACE_ENDPOINT=192.168.0.68:55689" \
+		-e "API_OTEL_METRICS_ENDPOINT=192.168.0.68:55690" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \

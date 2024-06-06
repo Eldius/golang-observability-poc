@@ -6,8 +6,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240606011538-487a2d2f019c h1:FWUaefOCOyPH1SbndQuK9FlBKJtYN2W0Q/gK0ASUCnI=
-github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240606011538-487a2d2f019c/go.mod h1:fsZhFqTSmVzcbrg51kAW0Pkh/l+bCv3fzePlhNEMrx8=
+github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240606011746-0fdb80277de7 h1:/Dp4JQE16Fk96RQMOja8PzhsUGrJkW3PIekNSA5YcA4=
+github.com/eldius/golang-observability-poc/otel-instrumentation-helper v0.0.0-20240606011746-0fdb80277de7/go.mod h1:fsZhFqTSmVzcbrg51kAW0Pkh/l+bCv3fzePlhNEMrx8=
 github.com/felixge/httpsnoop v1.0.2/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=
 github.com/felixge/httpsnoop v1.0.4/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
