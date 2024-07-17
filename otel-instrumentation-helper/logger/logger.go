@@ -22,6 +22,7 @@ var (
 		"function",
 		"file",
 		"line",
+		"trace_id",
 	}
 
 	logger *slog.Logger
@@ -51,11 +52,11 @@ func SetupLogs(logLevel, service string) error {
 		if strings.HasPrefix(a.Key, "request.") || strings.HasPrefix(a.Key, "response.") || strings.HasPrefix(a.Key, "service.") {
 			return a
 		}
-		if a.Key == "msg" {
+		if a.Key == slog.MessageKey {
 			a.Key = "message"
 			return a
 		}
-		a.Key = fmt.Sprintf(".custom.%s.%s", service, a.Key)
+		a.Key = fmt.Sprintf("custom.%s.%s", service, a.Key)
 		return a
 	}
 
