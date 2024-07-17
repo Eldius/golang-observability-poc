@@ -55,7 +55,7 @@ func SetupLogs(logLevel, service string) error {
 			a.Key = "message"
 			return a
 		}
-		a.Key = fmt.Sprintf("custom.%s.%s", service, a.Key)
+		a.Key = fmt.Sprintf(".custom.%s.%s", service, a.Key)
 		return a
 	}
 
