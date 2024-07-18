@@ -43,7 +43,7 @@ func Logger() *slog.Logger {
 	return logger
 }
 
-func SetupLogs(logLevel, service string) error {
+func SetupLogs(logLevel, service, serviceVersion string) error {
 	var h slog.Handler
 	var w io.Writer = os.Stdout
 
@@ -75,6 +75,7 @@ func SetupLogs(logLevel, service string) error {
 
 	slog.SetDefault(logger.With(
 		slog.String("service.name", service),
+		slog.String("service.version", serviceVersion),
 		slog.String("host", host),
 	))
 
