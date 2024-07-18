@@ -111,3 +111,8 @@ func NotifyError(ctx context.Context, err error) {
 	span := trace.SpanFromContext(ctx)
 	span.RecordError(err, trace.WithStackTrace(true))
 }
+
+func AddTraceAttributes(ctx context.Context, attrs ...attribute.KeyValue) {
+	span := trace.SpanFromContext(ctx)
+	span.SetAttributes(attrs...)
+}
