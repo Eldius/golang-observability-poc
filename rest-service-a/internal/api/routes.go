@@ -8,6 +8,7 @@ import (
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/db"
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/integration/serviceb"
 	"github.com/go-chi/chi/v5"
+	"go.opentelemetry.io/otel/attribute"
 	"log/slog"
 	"net/http"
 	"time"
@@ -81,6 +82,11 @@ func weatherHandlerfunc(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("city is empty")) //nolint:errcheck // ignoring error
 		return
 	}
+	ctx := r.Context()
+	ctx, span := telemetry.NewSpan(ctx, "weatherHandlerfunc")
+	defer span.End()
+	span.SetAttributes(attribute.String("city", c))
+
 	we, err := serviceb.GetWeather(r.Context(), c)
 	if err != nil {
 		l.With("error", err).With(slog.String("city", c)).Error("service-b integration failed")
