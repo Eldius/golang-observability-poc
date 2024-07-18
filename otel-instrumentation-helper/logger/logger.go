@@ -23,6 +23,7 @@ var (
 		"file",
 		"line",
 		"trace_id",
+		"request",
 	}
 
 	logger *slog.Logger
