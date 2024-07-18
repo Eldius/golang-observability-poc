@@ -33,24 +33,25 @@ func ReqLogger(category string, logger *slog.Logger) func(h http.Handler) http.H
 					scheme = "https"
 				}
 				span := trace.SpanFromContext(r.Context())
-				fields := []slog.Attr{
-					slog.Int("request.status_code", ww.Status()),
-					slog.Int("request.bytes", ww.BytesWritten()),
-					slog.Int64("request.duration", int64(time.Since(t1))),
-					slog.String("request.duration_display", time.Since(t1).String()),
-					slog.String("request.category", category),
-					slog.String("request.remote_ip", remoteIP),
-					slog.String("request.proto", r.Proto),
-					slog.String("request.method", r.Method),
-					slog.String("request.trace_id", span.SpanContext().TraceID().String()),
-					slog.String("request.span_id", span.SpanContext().SpanID().String()),
-					slog.String("request.path", r.RequestURI),
-					slog.String("request.url", fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI)),
+
+				reqFields := map[string]interface{}{
+					"status_code":              ww.Status(),
+					"bytes":                    ww.BytesWritten(),
+					"duration":                 int64(time.Since(t1)),
+					"request.duration_display": time.Since(t1).String(),
+					"category":                 category,
+					"remote_ip":                remoteIP,
+					"proto":                    r.Proto,
+					"method":                   r.Method,
+					"trace_id":                 span.SpanContext().TraceID().String(),
+					"span_id":                  span.SpanContext().SpanID().String(),
+					"path":                     r.RequestURI,
+					"url":                      fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI),
 				}
 				if len(reqID) > 0 {
-					fields = append(fields, slog.String("request.id", reqID))
+					reqFields["id"] = reqID
 				}
-				logger.With(fields).Info("RequestReceived")
+				logger.With("request", reqFields).Info("RequestReceived")
 			}()
 
 			h.ServeHTTP(ww, r)
