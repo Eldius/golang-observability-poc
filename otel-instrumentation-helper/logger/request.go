@@ -5,24 +5,23 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"go.opentelemetry.io/otel/trace"
-	"log/slog"
 	"net"
 	"net/http"
 	"time"
 )
 
 func SetupRequestLog(r *chi.Mux) {
-	l := Logger()
-	r.Use(ReqLogger("router", l))
+	r.Use(ReqLogger("router"))
 }
 
 // ReqLogger returns a request logging middleware
-func ReqLogger(category string, logger *slog.Logger) func(h http.Handler) http.Handler {
+func ReqLogger(category string) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			reqID := middleware.GetReqID(r.Context())
 			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 			t1 := time.Now()
+			logger := GetLogger(r.Context())
 			defer func() {
 				remoteIP, _, err := net.SplitHostPort(r.RemoteAddr)
 				if err != nil {
