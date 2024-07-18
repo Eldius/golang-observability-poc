@@ -23,6 +23,7 @@ var (
 		"file",
 		"line",
 		"trace_id",
+		"span_id",
 		"request",
 	}
 
