@@ -19,6 +19,7 @@ build-docker:
 	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
 		-t eldius/service-a:dev \
+		-t eldius/service-a:$(COMMIT_HASH) \
 			.
 
 tidy:
