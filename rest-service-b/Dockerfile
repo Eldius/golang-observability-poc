@@ -1,5 +1,5 @@
 # builder image
-FROM golang:1.22.5-alpine3.19 as builder
+FROM golang:1.22.5-alpine3.19 AS builder
 
 ARG COMMIT_HASH
 
@@ -10,14 +10,16 @@ COPY . /app
 
 ENV CGO_ENABLED=0
 
+RUN go mod tidy
+
 RUN apk add --no-cache git make build-base
 RUN go build \
-    -o /app/app \
-    -v \
-    -a \
-    -ldflags '-extldflags "-static"' \
-    -ldflags "-X 'github.com/eldius/rest-api/rest-service-b/internal/config.Version=${COMMIT_HASH}'" \
-      ./cmd/
+        -o /app/app \
+        -v \
+        -a \
+        -ldflags '-extldflags "-static"' \
+        -ldflags "-X 'github.com/eldius/rest-api/rest-service-b/internal/config.Version=${COMMIT_HASH}'" \
+          ./cmd/
 
 RUN chmod +x /app/app
 

@@ -1,8 +1,6 @@
 
 OBSERVABILITY_HOST ?= 192.168.0.68
 
-CLUSTER_IP := 192.168.100.196
-
 start:
 	$(eval OTEL_ENDPOINT := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jaeger))
 	$(eval DB_HOST := $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres))
@@ -18,6 +16,7 @@ start:
 build-docker:
 	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
 	@echo "COMMIT_HASH: $(COMMIT_HASH)"
+	@echo "PWD: $(PWD)"
 	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
 		-t eldius/service-b:dev \
@@ -33,7 +32,7 @@ build: tidy
 		-v \
 		-a \
 		-ldflags '-extldflags "-static"' \
-		-ldflags "-X \"github.com/eldius/rest-api/rest-service-a/internal/config.Version=$(shell git rev-parse --short HEAD )\"" \
+		-ldflags "-X \"github.com/eldius/rest-api/rest-service-b/internal/config.Version=$(shell git rev-parse --short HEAD )\"" \
 		./cmd/
 
 update-library:

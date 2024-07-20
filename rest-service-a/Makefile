@@ -16,6 +16,7 @@ start:
 build-docker:
 	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
 	@echo "COMMIT_HASH: $(COMMIT_HASH)"
+	@echo "PWD: $(PWD)"
 	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
 		-t eldius/service-a:dev \
@@ -38,7 +39,8 @@ update-library:
 	go get -u github.com/eldius/golang-observability-poc/otel-instrumentation-helper@$(shell git rev-parse --short HEAD)
 
 
-docker-down:
+docker-down: db-down
+	-docker network rm services_network
 	-docker kill service_a
 	-docker rm service_a
 

@@ -83,7 +83,7 @@ func weatherHandlerfunc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := r.Context()
-	ctx, span := telemetry.NewSpan(ctx, "weatherHandlerfunc")
+	ctx, span := telemetry.NewSpan(ctx, "WeatherHandlerfunc")
 	defer span.End()
 	span.SetAttributes(attribute.String("city", c))
 
