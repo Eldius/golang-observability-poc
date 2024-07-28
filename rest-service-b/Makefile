@@ -19,6 +19,7 @@ build-docker:
 	@echo "PWD: $(PWD)"
 	docker buildx build \
 		--build-arg COMMIT_HASH=$(COMMIT_HASH) \
+		--no-cache \
 		-t eldius/service-b:dev \
 		-t eldius/service-b:$(COMMIT_HASH) \
 			.

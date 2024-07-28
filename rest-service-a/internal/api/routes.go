@@ -18,17 +18,17 @@ func Start(port int) {
 	l := logger.Logger()
 
 	r := http.NewServeMux()
+	r.HandleFunc("/", homeHandlerfunc)
+	r.HandleFunc("/ping", pingHandlerfunc)
+	r.HandleFunc("/health", healthHandlerfunc)
+	r.HandleFunc("/weather", weatherHandlerfunc)
 
-	telemetry.AddRouteHandler(r, "/", homeHandlerfunc)
-	telemetry.AddRouteHandler(r, "/ping", pingHandlerfunc)
-	telemetry.AddRouteHandler(r, "/health", healthHandlerfunc)
-	telemetry.AddRouteHandler(r, "/weather", weatherHandlerfunc)
-
-	logger.SetupRequestLog(r)
+	router := telemetry.TracedRouter(r)
+	router = logger.SetupRequestLog(router)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
-		Handler:           AuthAPIKey("api", db.DB())(r),
+		Handler:           AuthAPIKey("api", db.DB())(router),
 		ReadHeaderTimeout: 100 * time.Millisecond,
 	}
 	l.With(slog.String("addr", srv.Addr)).
