@@ -75,12 +75,13 @@ docker-up-opensearch-k8s: docker-down build-docker
 			eldius/service-b:dev
 
 docker-up-grafana: docker-down build-docker
+	@echo "WEATHER_APIKEY: $(WEATHER_APIKEY)"
 	docker run \
 		--rm \
 		--name service_b \
+		--network services_network \
 		-d \
 		-m 16m \
-		--network services_network \
 		--log-driver=loki \
 		--log-opt loki-url="http://$(OBSERVABILITY_HOST):3100/loki/api/v1/push" \
 		--log-opt loki-external-labels="container_name={{.Name}},cluster=compose,container_id={{.ID}}" \

@@ -10,8 +10,8 @@ COPY . /app
 
 ENV CGO_ENABLED=0
 
-RUN apk add --no-cache git make build-base && \
-    go build \
+RUN apk add --no-cache git make build-base
+RUN go build \
         -o /app/app \
         -v \
         -a \

@@ -156,10 +156,10 @@ docker-up-grafana: db docker-down build-docker
 		-e "API_TELEMETRY_REST_ENABLE=true" \
 		-e "API_TELEMETRY_DB_ENABLE=true" \
 		-e "API_LOG_LEVEL=trace" \
+		-e "API_LOG_FORMAT=json" \
 		-e "API_DB_HOST=db" \
 		-e "API_DB_USER=rest_api" \
 		-e "API_DB_PASS=P@ss" \
-		-e "API_LOG_FORMAT=json" \
 			eldius/service-a:dev
 
 docker-up-skywalking-k8s: docker-down build-docker
