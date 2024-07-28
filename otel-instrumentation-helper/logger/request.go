@@ -2,7 +2,6 @@ package logger
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"go.opentelemetry.io/otel/trace"
 	"net"
@@ -10,8 +9,8 @@ import (
 	"time"
 )
 
-func SetupRequestLog(r *chi.Mux) {
-	r.Use(ReqLogger("router"))
+func SetupRequestLog(r http.Handler) http.Handler {
+	return ReqLogger("router")(r)
 }
 
 // ReqLogger returns a request logging middleware

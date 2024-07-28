@@ -2,10 +2,10 @@ package telemetry
 
 import (
 	"context"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"net/http"
 
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
-	"github.com/go-chi/chi/v5"
-	"github.com/riandyrn/otelchi"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -104,13 +104,22 @@ func WithContext(c context.Context) Option {
 	}
 }
 
-func SetupRestTracing(r *chi.Mux) {
+func TracedHandler(pattern string, h http.HandlerFunc) http.Handler {
+	if telemetryOpts == nil {
+		l := logger.Logger()
+		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
+		return h
+	}
+	return otelhttp.WithRouteTag(pattern, http.Handler(h))
+}
+
+func AddRouteHandler(mux *http.ServeMux, pattern string, h http.HandlerFunc) {
 	if telemetryOpts == nil {
 		l := logger.Logger()
 		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
 		return
 	}
-	r.Use(otelchi.Middleware(telemetryOpts.serviceName, otelchi.WithChiRoutes(r)))
+	mux.Handle(pattern, otelhttp.WithRouteTag(pattern, http.Handler(h)))
 }
 
 func StartSpan(ctx context.Context, name string) (context.Context, CloserFunc) {
