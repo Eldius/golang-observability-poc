@@ -7,7 +7,6 @@ import (
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/db"
 	"github.com/eldius/golang-observability-poc/rest-service-a/internal/integration/serviceb"
-	"github.com/go-chi/chi/v5"
 	"go.opentelemetry.io/otel/attribute"
 	"log/slog"
 	"net/http"
@@ -18,21 +17,18 @@ func Start(port int) {
 
 	l := logger.Logger()
 
-	r := chi.NewRouter()
+	r := http.NewServeMux()
 
-	telemetry.SetupRestTracing(r)
+	telemetry.AddRouteHandler(r, "/", homeHandlerfunc)
+	telemetry.AddRouteHandler(r, "/ping", pingHandlerfunc)
+	telemetry.AddRouteHandler(r, "/health", healthHandlerfunc)
+	telemetry.AddRouteHandler(r, "/weather", weatherHandlerfunc)
+
 	logger.SetupRequestLog(r)
-
-	r.Use(AuthAPIKey("api", db.DB()))
-
-	r.Get("/", homeHandlerfunc)
-	r.Get("/ping", pingHandlerfunc)
-	r.Get("/health", healthHandlerfunc)
-	r.Get("/weather", weatherHandlerfunc)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
-		Handler:           r,
+		Handler:           AuthAPIKey("api", db.DB())(r),
 		ReadHeaderTimeout: 100 * time.Millisecond,
 	}
 	l.With(slog.String("addr", srv.Addr)).

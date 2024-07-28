@@ -6,7 +6,6 @@ import (
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-b/internal/weather"
-	"github.com/go-chi/chi/v5"
 	"log/slog"
 	"net/http"
 	"time"
@@ -16,14 +15,13 @@ func Start(port int) {
 
 	l := logger.Logger()
 
-	r := chi.NewRouter()
+	r := http.NewServeMux()
 
-	telemetry.SetupRestTracing(r)
+	telemetry.AddRouteHandler(r, "/", homeHandlerfunc)
+	telemetry.AddRouteHandler(r, "/health", healthHandlerfunc)
+	telemetry.AddRouteHandler(r, "/weather", weatherHandlerFunc)
+
 	logger.SetupRequestLog(r)
-
-	r.Get("/", homeHandlerfunc)
-	r.Get("/health", healthHandlerfunc)
-	r.Get("/weather", weatherHandlerFunc)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
