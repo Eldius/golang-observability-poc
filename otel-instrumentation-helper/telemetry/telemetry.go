@@ -104,15 +104,6 @@ func WithContext(c context.Context) Option {
 	}
 }
 
-func TracedHandler(pattern string, h http.HandlerFunc) http.Handler {
-	if telemetryOpts == nil {
-		l := logger.Logger()
-		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
-		return h
-	}
-	return otelhttp.WithRouteTag(pattern, http.Handler(h))
-}
-
 func AddRouteHandler(mux *http.ServeMux, pattern string, h http.HandlerFunc) {
 	if telemetryOpts == nil {
 		l := logger.Logger()
