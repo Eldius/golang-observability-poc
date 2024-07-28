@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"context"
+	"fmt"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"net/http"
 
@@ -110,7 +111,14 @@ func TracedRouter(h http.Handler) http.Handler {
 		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
 		return h
 	}
-	return otelhttp.NewHandler(h, "test")
+	return otelhttp.NewHandler(
+		h,
+		"",
+		otelhttp.WithSpanNameFormatter(func(operation string, r *http.Request) string {
+			return fmt.Sprintf("[%s] %s %s", operation, r.Method, r.URL)
+		}),
+		otelhttp.WithPublicEndpoint(),
+	)
 }
 
 func StartSpan(ctx context.Context, name string) (context.Context, CloserFunc) {
