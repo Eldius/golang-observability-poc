@@ -115,7 +115,7 @@ func TracedRouter(h http.Handler) http.Handler {
 		h,
 		"",
 		otelhttp.WithSpanNameFormatter(func(operation string, r *http.Request) string {
-			return fmt.Sprintf("[%s] %s %s", operation, r.Method, r.URL)
+			return fmt.Sprintf("%s %s", r.Method, r.URL.Path)
 		}),
 		otelhttp.WithPublicEndpoint(),
 	)
