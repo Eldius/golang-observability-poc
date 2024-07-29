@@ -121,6 +121,22 @@ func TracedRouter(h http.Handler) http.Handler {
 	)
 }
 
+func TracedHandler(h http.HandlerFunc, name string) http.Handler {
+	if telemetryOpts == nil {
+		l := logger.Logger()
+		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
+		return h
+	}
+	return otelhttp.NewHandler(
+		h,
+		name,
+		otelhttp.WithSpanNameFormatter(func(operation string, r *http.Request) string {
+			return fmt.Sprintf("%s %s", r.Method, r.URL.Path)
+		}),
+		otelhttp.WithPublicEndpoint(),
+	)
+}
+
 func StartSpan(ctx context.Context, name string) (context.Context, CloserFunc) {
 	c, s := Tracer.Start(ctx, name)
 	return c, func() {
