@@ -3,8 +3,8 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/httprouter"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
-	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
 	"github.com/eldius/golang-observability-poc/rest-service-b/internal/weather"
 	"log/slog"
 	"net/http"
@@ -21,12 +21,9 @@ func Start(port int) {
 	r.HandleFunc("/health", healthHandlerfunc)
 	r.HandleFunc("/weather", weatherHandlerFunc)
 
-	router := telemetry.TracedRouter(r)
-	router = logger.SetupRequestLog(router)
-
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
-		Handler:           router,
+		Handler:           httprouter.SetupRouter(r),
 		ReadHeaderTimeout: 100 * time.Millisecond,
 	}
 	l.With(slog.String("addr", srv.Addr)).
