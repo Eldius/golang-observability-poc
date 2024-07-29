@@ -21,7 +21,7 @@ RUN go build \
 
 RUN chmod +x /app/app
 
-FROM gcr.io/distroless/base
+FROM gcr.io/distroless/base:nonroot
 
 EXPOSE 8080
 
