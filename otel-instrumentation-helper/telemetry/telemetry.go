@@ -137,6 +137,16 @@ func TracedHandler(h http.HandlerFunc, name string) http.Handler {
 	)
 }
 
+func AddTracedRoute(mux *http.ServeMux, pattern string, h http.HandlerFunc) {
+	if telemetryOpts == nil {
+		l := logger.Logger()
+		l.Warn("telemetry configuration not started, please call telemetry.InitTelemetry before instrument your code")
+		mux.Handle(pattern, h)
+		return
+	}
+	mux.Handle(pattern, otelhttp.WithRouteTag(pattern, h))
+}
+
 func StartSpan(ctx context.Context, name string) (context.Context, CloserFunc) {
 	c, s := Tracer.Start(ctx, name)
 	return c, func() {
