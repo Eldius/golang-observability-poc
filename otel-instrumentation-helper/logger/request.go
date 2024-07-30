@@ -45,6 +45,10 @@ func ReqLogger(category string) func(h http.Handler) http.Handler {
 					"span_id":                  span.SpanContext().SpanID().String(),
 					"path":                     r.RequestURI,
 					"url":                      fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI),
+					"headers":                  r.Header,
+					"response": map[string]interface{}{
+						"headers": ww.Header(),
+					},
 				}
 				if len(reqID) > 0 {
 					reqFields["id"] = reqID
