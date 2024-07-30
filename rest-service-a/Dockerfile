@@ -1,16 +1,18 @@
 # builder image
-FROM golang:1.22.5-alpine3.19 AS builder
+FROM golang:1.22.5-alpine3.20 AS builder
 
 ARG COMMIT_HASH
 
 ENV COMMIT_HASH=${COMMIT_HASH}
+
+RUN apk add --no-cache git make build-base
 
 WORKDIR /app
 COPY . /app
 
 ENV CGO_ENABLED=0
 
-RUN apk add --no-cache git make build-base
+RUN go mod tidy
 RUN go build \
         -o /app/app \
         -v \
