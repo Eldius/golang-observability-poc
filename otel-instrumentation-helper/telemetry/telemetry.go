@@ -4,6 +4,10 @@ import (
 	"context"
 	"fmt"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
+	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 	"net/http"
 
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
@@ -160,4 +164,35 @@ func AddAttribute(ctx context.Context, k, v string) {
 
 func NewSpan(ctx context.Context, name string) (context.Context, trace.Span) {
 	return Tracer.Start(ctx, name)
+}
+
+func TraceMiddleware(serviceName string) func(h http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		fn := func(w http.ResponseWriter, r *http.Request) {
+			if mapPropagator := otel.GetTextMapPropagator(); mapPropagator != nil {
+				ctx := mapPropagator.Extract(r.Context(), propagation.HeaderCarrier(r.Header))
+				if traceProvider := otel.GetTracerProvider(); traceProvider != nil {
+					// request tracing preparation
+					spanOptions := []trace.SpanStartOption{
+						trace.WithAttributes(semconv.HTTPRoute(r.URL.Path)),
+						trace.WithAttributes(httpconv.ServerRequest(serviceName, r)...),
+						trace.WithSpanKind(trace.SpanKindServer),
+					}
+
+					spanName := fmt.Sprintf("%s %s", r.Method, r.URL.Path)
+
+					ctx, span := traceProvider.Tracer(serviceName).Start(ctx, spanName, spanOptions...)
+					defer span.End()
+					r = r.WithContext(ctx)
+
+					h.ServeHTTP(w, r)
+					return
+				}
+			}
+
+			h.ServeHTTP(w, r)
+		}
+
+		return http.HandlerFunc(fn)
+	}
 }

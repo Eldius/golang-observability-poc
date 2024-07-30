@@ -6,7 +6,6 @@ import (
 	"net/http"
 )
 
-func SetupRouter(r http.Handler) http.Handler {
-	router := logger.SetupRequestLog(r)
-	return telemetry.TracedRouter(router)
+func SetupRouter(serviceName string, r http.Handler) http.Handler {
+	return telemetry.TraceMiddleware(serviceName)(logger.SetupRequestLog(r))
 }
