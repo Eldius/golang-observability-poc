@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/httprouter"
 	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/logger"
+	"github.com/eldius/golang-observability-poc/otel-instrumentation-helper/telemetry"
+	"github.com/eldius/golang-observability-poc/rest-service-b/internal/config"
 	"github.com/eldius/golang-observability-poc/rest-service-b/internal/weather"
 	"log/slog"
 	"net/http"
@@ -17,13 +19,13 @@ func Start(port int) {
 
 	r := http.NewServeMux()
 
-	r.HandleFunc("/", homeHandlerfunc)
-	r.HandleFunc("/health", healthHandlerfunc)
-	r.HandleFunc("/weather", weatherHandlerFunc)
+	telemetry.AddTracedRoute(r, "/", homeHandlerfunc)
+	telemetry.AddTracedRoute(r, "/health", healthHandlerfunc)
+	telemetry.AddTracedRoute(r, "/weather", weatherHandlerFunc)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
-		Handler:           httprouter.SetupRouter(r),
+		Handler:           httprouter.SetupRouter(config.GetServiceName(), r),
 		ReadHeaderTimeout: 100 * time.Millisecond,
 	}
 	l.With(slog.String("addr", srv.Addr)).

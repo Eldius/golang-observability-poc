@@ -83,9 +83,8 @@ docker-up-grafana: docker-down build-docker
 		--network services_network \
 		-d \
 		-m 16m \
-		--log-driver=loki \
-		--log-opt loki-url="http://$(OBSERVABILITY_HOST):3100/loki/api/v1/push" \
-		--log-opt loki-external-labels="container_name={{.Name}},cluster=compose,container_id={{.ID}}" \
+		--log-driver=fluentd \
+		--log-opt fluentd-address=$(OBSERVABILITY_HOST):8006 \
 		-e "API_OTEL_TRACE_ENDPOINT=$(OBSERVABILITY_HOST):55689" \
 		-e "API_OTEL_METRICS_ENDPOINT=$(OBSERVABILITY_HOST):55690" \
 		-e "API_TELEMETRY_REST_ENABLE=true" \
